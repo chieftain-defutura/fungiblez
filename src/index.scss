@@ -1,0 +1,309 @@
+@use './styles';
+
+@font-face {
+  font-family: 'grold-black';
+  src: local('GroldBlack'),
+    url('./assets/fonts/Grold-Black.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'grold-bold';
+  src: local('GroldBold'),
+    url('./assets/fonts/Grold-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'grold-extrabold';
+  src: local('GroldExtraBold'),
+    url('./assets/fonts/Grold-ExtraBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'grold-medium';
+  src: local('GroldMedium'),
+    url('./assets/fonts/Grold-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'grold-regular';
+  src: local('GroldRegular'),
+    url('./assets/fonts/Grold-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'grold-light';
+  src: local('GroldLight'),
+    url('./assets/fonts/Grold-Light.ttf') format('truetype');
+}
+
+:root {
+  --header-height: 90px;
+
+  --card-border-radius: 10px;
+
+  --font-regular: 'grold-regular';
+  --font-bold: 'grold-bold';
+  --font-light: 'grold-light';
+  --font-medium: 'grold-medium';
+  --font-black: 'grold-black';
+
+  // COLOR PALLETTES
+
+  --background: #ffffff;
+  --modal-background: #ffffff;
+  --card-background: #ffffff;
+  --input-background: #f2f2f2;
+  --section-background: #eeeeee;
+  --section-border: #ffffff;
+
+  --modal-backdrop: rgba(0, 0, 0, 0.5);
+
+  --btn-primary: #e57f8c;
+  --btn-secondary: #5b2b9b;
+  --btn-ternary: #eeeeee;
+
+  --btn-error: #d0342c;
+
+  --link: #1e1e1e;
+  --active-link: #95268d;
+
+  --secondary: #5b2b9b;
+  --text-primary: #1e1e1e;
+  --text-secondary: #777777;
+  --highlight-text: #95268d;
+  --input-text: #c2c2c2;
+  --text-pink: #e57f8c;
+
+  --text-success: #4bb543;
+  --text-error: #d0342c;
+  --text-warning: #f7b84b;
+
+  --dropdown-box-shadow: 0px 0px 5px rgba(15, 34, 58, 0.14902);
+  --btn-primary-shadow: 0px 5px 10px #fdd3d8;
+  --btn-secondary-shadow: 0px 5px 10px #c1b3d5;
+  --card-box-shadow: 0px 20px 40px #d0d0d0;
+  --box-shadow-one: 0px 5px 10px #d0d0d0;
+  --header-box-shadow: 0.5px 0.5px 5px rgba(0, 0, 0, 0.1);
+  --hero-card-bs: 0px 20px 50px #d6d3f9, inset 0px -5px 10px #8986b7;
+}
+
+html {
+  font-size: 62.5%;
+
+  @media (max-width: 576px) {
+    font-size: 50%;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 1.4rem;
+  font-family: var(--font-regular);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  line-height: 1.5;
+  font-family: var(--font-light);
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  color: var(--text-primary);
+
+  &.dark {
+    --background: #0a0a0a;
+    --modal-background: #0a0a0a;
+    --card-background: #252525;
+    --input-background: #252525;
+    --section-background: #252525;
+    --section-border: #0a0a0a;
+
+    --modal-backdrop: rgba(255, 255, 255, 0.3);
+
+    --btn-primary: #e57f8c;
+    --btn-secondary: #5b2b9b;
+    --btn-ternary: #252525;
+    --btn-error: #d0342c;
+
+    --link: #ffffff;
+    --active-link: #95268d;
+
+    --secondary: #5b2b9b;
+    --text-primary: #ffffff;
+    --text-secondary: #777777;
+    --highlight-text: #95268d;
+    --input-text: #1e1e1e;
+
+    --dropdown-box-shadow: 0px 0px 5px rgba(15, 34, 58, 0.14902);
+    --btn-primary-shadow: initial;
+    --btn-secondary-shadow: initial;
+    --card-box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2);
+    --box-shadow-one: 0px 5px 10px rgba(0, 0, 0, 0.5);
+    --header-box-shadow: 0.5px 0.5px 5px rgba(255, 255, 255, 0.1);
+    --hero-card-bs: 0px 20px 50px #353537, inset 0px -5px 10px #585674;
+  }
+}
+
+.app {
+  &.add {
+    margin-top: 130px;
+  }
+
+  &.remove {
+    margin-top: 90px;
+  }
+}
+
+iframe {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  color: var(--link);
+  font-size: 1.4rem;
+  line-height: 2.2rem;
+}
+
+.mx {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.pad {
+  padding: 0 3.2rem;
+
+  @media (max-width: 768px) {
+    padding: 0 2rem;
+  }
+  @media (max-width: 576px) {
+    padding: 0 2rem;
+  }
+}
+
+@for $i from 5 to 51 {
+  .p-#{$i} {
+    padding: $i + px;
+  }
+  .pt-#{$i} {
+    padding-top: $i + px;
+  }
+  .pl-#{$i} {
+    padding-left: $i + px;
+  }
+  .pr-#{$i} {
+    padding-right: $i + px;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i + px;
+  }
+  .m-#{$i} {
+    margin: $i + px;
+  }
+  .mt-#{$i} {
+    margin-top: $i + px;
+  }
+  .ml-#{$i} {
+    margin-left: $i + px;
+  }
+  .mr-#{$i} {
+    margin-right: $i + px;
+  }
+  .mb-#{$i} {
+    margin-bottom: $i + px;
+  }
+  .g-#{$i} {
+    gap: $i + px;
+  }
+  .br-#{$i} {
+    border-radius: $i + px;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.promise_error {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  min-height: 50vh;
+}
+
+.card_wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2.4rem;
+  justify-content: center;
+}
+
+.nft_card {
+  word-break: break-all;
+  &-container {
+    padding: 2rem;
+    background-color: var(--card-background);
+    box-shadow: var(--card-box-shadow);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    cursor: pointer;
+
+    &_image {
+      width: 100%;
+      aspect-ratio: 1/1;
+      border-radius: 10px;
+
+      > span {
+        display: block;
+        width: inherit;
+        height: inherit;
+        img {
+          width: inherit;
+          aspect-ratio: 1/1;
+          border-radius: 10px;
+          object-fit: cover;
+        }
+      }
+
+      .no_image {
+        height: 100%;
+        display: grid;
+        place-items: center;
+      }
+    }
+
+    &_content {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    &_controls {
+      button {
+        width: 100%;
+        border-radius: 5px;
+      }
+    }
+  }
+}
+
+.social_icon {
+  svg {
+    path {
+      stroke: var(--text-primary);
+    }
+  }
+}
+
+.cronos {
+  path {
+    fill: var(--text-primary);
+  }
+}

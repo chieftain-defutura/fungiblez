@@ -1,0 +1,176 @@
+.home {
+  .hero {
+    padding: 8rem 0;
+    // min-height: calc(100vh - 90px);
+
+    &_wrapper {
+      display: grid;
+      grid-template-columns: auto 320px;
+
+      @media (max-width: 768px) {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: center;
+        gap: 32px;
+      }
+
+      &-content {
+        p {
+          font-size: 2.4rem;
+        }
+
+        strong {
+          font-family: var(--font-regular);
+          font-size: 2rem;
+        }
+
+        .flex a {
+          svg path {
+            // stroke: var(--text-primary);
+            fill: var(--text-primary);
+          }
+        }
+      }
+
+      &-card {
+        width: 100%;
+
+        @media (max-width: 768px) {
+          max-width: 320px;
+        }
+
+        > div {
+          width: inherit;
+          background: #a19cf1;
+          box-shadow: var(--hero-card-bs);
+          border-radius: var(--card-border-radius);
+          padding: 10px 10px 20px;
+
+          .lazy-load-image-background {
+            display: block;
+            width: inherit;
+            img {
+              width: inherit;
+              aspect-ratio: 1;
+              object-fit: cover;
+              border-radius: var(--card-border-radius);
+            }
+          }
+
+          .no_image {
+            width: inherit;
+            aspect-ratio: 1;
+          }
+        }
+      }
+    }
+  }
+
+  &_collection {
+    overflow-x: hidden;
+    padding-bottom: 50px;
+
+    h2 {
+      text-align: center;
+      font-family: var(--font-regular);
+    }
+
+    &-card {
+      background-color: var(--card-background);
+      padding: 10px 10px 20px;
+      box-shadow: var(--card-box-shadow);
+      border-radius: var(--card-border-radius);
+
+      &_image {
+        width: 100%;
+
+        img {
+          width: 100%;
+          aspect-ratio: 1;
+          object-fit: cover;
+          border-radius: var(--card-border-radius);
+        }
+
+        .no_image {
+          width: 100%;
+          aspect-ratio: 1;
+          display: grid;
+          place-items: center;
+        }
+      }
+    }
+  }
+
+  .trending_collection {
+    margin-bottom: 50px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 16px;
+      font-family: var(--font-regular);
+    }
+
+    .table_container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--section-border);
+      border-radius: 20px;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: var(--section-background);
+
+        tbody tr {
+          cursor: pointer;
+        }
+
+        td,
+        th {
+          border-top: 1px solid var(--section-border);
+          border-bottom: 1px solid var(--section-border);
+          white-space: nowrap;
+        }
+
+        th {
+          padding: 2.8rem 2rem;
+          text-align: left;
+          font-family: var(--font-regular);
+        }
+
+        td {
+          padding: 1.6rem 2rem;
+
+          &.collection-name {
+            * {
+              font-family: var(--font-regular);
+            }
+
+            img {
+              width: 40px;
+              aspect-ratio: 1;
+              margin: 0 10px 0 16px;
+            }
+
+            .no_image {
+              width: 40px;
+              aspect-ratio: 1;
+              margin: 0 10px 0 16px;
+
+              svg {
+                width: 40px;
+                height: 40px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

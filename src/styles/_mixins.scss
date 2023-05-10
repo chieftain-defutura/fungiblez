@@ -1,0 +1,15 @@
+@mixin flexbox {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin flex($gap: 1rem, $alignItems: center, $justifyContent: flex-start) {
+  @include flexbox();
+  align-items: $alignItems;
+  justify-content: $justifyContent;
+  gap: $gap;
+  grid-gap: $gap;
+}

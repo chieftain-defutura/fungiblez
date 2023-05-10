@@ -1,0 +1,52 @@
+.Marketplace_collection {
+  .search_input {
+    width: 100%;
+    background: var(--input-background);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 5px;
+
+    input {
+      outline: none;
+      border: none;
+      width: 100%;
+      background-color: transparent;
+    }
+  }
+
+  &-data {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    padding: 3rem 0;
+
+    &_card {
+      .lazy-load-image-background {
+        img {
+          width: 30px;
+          height: 30px;
+          border: 2px;
+        }
+      }
+
+      .no_image {
+        svg {
+          width: 30px;
+          height: 30px;
+        }
+      }
+    }
+  }
+
+  .btn-view_more {
+    display: grid;
+    place-items: center;
+    text-align: center;
+
+    p {
+      cursor: pointer;
+    }
+  }
+}

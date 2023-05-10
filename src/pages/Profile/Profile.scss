@@ -1,0 +1,145 @@
+.profile_route {
+  &-details {
+    position: relative;
+    padding: 3.2rem;
+
+    .banner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .user_details {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+
+      p {
+        color: #fff;
+      }
+
+      svg path {
+        stroke: #fff;
+      }
+
+      .avatar {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--background);
+      }
+
+      .controls {
+        margin-top: 1rem;
+        button {
+          background: var(--section-background);
+          box-shadow: var(--box-shadow-one);
+          color: var(--text-primary);
+          gap: 5px;
+
+          svg path {
+            stroke: var(--text-primary);
+          }
+        }
+      }
+    }
+  }
+
+  .profile_pages {
+    background-color: var(--background);
+    padding: 4rem;
+
+    &-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 3.2rem;
+
+      a {
+        font-size: 1.8rem;
+        text-transform: capitalize;
+        padding: 8px;
+
+        &.active {
+          border-bottom: 1px solid #e57f8c;
+        }
+      }
+    }
+  }
+}
+
+.profile_modal {
+  &-form {
+    padding: 2rem 0 0;
+
+    .form_controls {
+      label {
+        font-size: 1.6rem;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        font-family: var(--font-regular);
+      }
+
+      .input_controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        background-color: var(--input-background);
+        border-radius: 5px;
+        padding: 0.5rem 1.5rem;
+
+        input {
+          font-size: 1.8rem;
+          border: none;
+          outline: none;
+          width: 100%;
+          font-family: var(--font-regular);
+          color: var(--text-primary);
+          background-color: transparent;
+        }
+      }
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      border-radius: 5px;
+    }
+  }
+
+  .profile_dropdown {
+    button {
+      max-width: 50px;
+    }
+  }
+}
+
+.profile_nft-card_modal-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 2rem;
+}

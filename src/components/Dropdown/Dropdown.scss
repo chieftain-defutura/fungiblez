@@ -1,0 +1,43 @@
+.dropdown {
+  position: relative;
+
+  button {
+    all: unset;
+    width: 200px;
+    padding: 0.5rem 1.6rem;
+    font-size: 1.6rem;
+    color: #fff;
+    border-radius: 5px;
+    background-color: var(--secondary);
+    box-shadow: var(--box-shadow-one);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+
+    svg path {
+      fill: #fff;
+    }
+  }
+
+  &_lists {
+    position: absolute;
+    top: calc(100% + 1rem);
+    right: 0;
+    min-width: 100%;
+    height: fit-content;
+    padding: 0.5rem;
+    background: var(--card-background);
+    box-shadow: var(--box-shadow-one);
+    border-radius: 5px;
+
+    > p {
+      padding: 0.3rem 1rem;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+  }
+}

@@ -1,0 +1,125 @@
+%base-styles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--modal-background);
+  border-radius: 5px;
+  max-width: 560px;
+  padding: 3.2rem;
+  width: 100%;
+}
+
+.modal_backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-backdrop);
+  z-index: 100;
+}
+
+.modal {
+  &_header {
+    margin-bottom: 3.2rem;
+
+    h3 {
+      font-size: 2.5rem;
+      font-family: var(--font-regular);
+    }
+
+    .close {
+      cursor: pointer;
+    }
+  }
+}
+
+.fixed-modal {
+  @extend %base-styles;
+  max-width: 480px;
+  width: 100%;
+
+  @media (max-width: 576px) {
+    max-width: 90%;
+  }
+}
+
+.transaction_modal {
+  @extend %base-styles;
+  max-width: 480px;
+  width: 100%;
+
+  @media (max-width: 576px) {
+    max-width: 90%;
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3.2rem;
+
+    h2 {
+      font-size: 2.4rem;
+      line-height: initial;
+    }
+
+    > div {
+      display: grid;
+      place-items: center;
+    }
+
+    .processing_loader {
+      svg {
+        animation: loader 2s ease-in-out infinite;
+
+        @keyframes loader {
+          from {
+            transform: rotate(0);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      }
+    }
+  }
+}
+
+.wallet_modal {
+  @extend %base-styles;
+  max-width: 480px;
+  width: 100%;
+  padding: 1.5em;
+
+  @media (max-width: 576px) {
+    max-width: 90%;
+  }
+
+  .wallet_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5em;
+    margin-bottom: 3.2rem;
+
+    &-card {
+      width: 160px;
+      box-sizing: border-box;
+      cursor: pointer;
+      background: var(--section-background);
+      border-radius: 5px;
+      padding: 2rem 3rem;
+      text-align: center;
+      filter: drop-shadow(var(--box-shadow-one));
+
+      img {
+        width: 80px;
+        aspect-ratio: 1;
+        object-fit: contain;
+      }
+    }
+  }
+}

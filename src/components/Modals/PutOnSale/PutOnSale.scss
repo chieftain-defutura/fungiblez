@@ -1,0 +1,86 @@
+.fixed-sale-form {
+  input {
+    width: 100%;
+    padding: 12px 22px;
+    outline: none;
+    border: 1px solid #343434;
+    background: transparent;
+    color: #aaaaaa;
+    font-size: 18px;
+    margin-top: 14px;
+  }
+  .dropDown {
+    width: 110px;
+    position: relative;
+    padding: 10px 0;
+
+    .select-dropDown {
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+
+      p {
+        color: #f5f5f5;
+        font-size: 14px;
+      }
+      img {
+        width: 16px;
+        height: 16px;
+      }
+      .chevronDown {
+        margin-left: 6px;
+        img {
+          width: 8px;
+          height: 4px;
+        }
+      }
+    }
+    .dropDown-list {
+      background: #252525;
+      border-radius: 8px;
+      color: #ffffff;
+      position: absolute;
+      top: 8px;
+      left: 0;
+      right: 0;
+      padding: 5px 16px;
+
+      .usdt-img {
+        img {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+        }
+      }
+      .dropDown-items {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        padding: 3px 6px;
+        border-bottom: 0.2px solid rgba(119, 119, 119, 0.2);
+        &:last-child {
+          border-bottom: none;
+        }
+        p {
+          font-size: 12px;
+          text-transform: uppercase;
+          padding: 2px;
+        }
+        &:hover {
+          color: #fea823;
+        }
+      }
+    }
+  }
+
+  p {
+    font-size: 16px;
+    color: red;
+    margin-left: 6px;
+  }
+}

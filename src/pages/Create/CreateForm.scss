@@ -1,0 +1,28 @@
+.create_form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3.2rem;
+  padding: 50px;
+
+  .form_card {
+    max-width: 360px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-radius: 10px;
+    overflow: hidden;
+    background-image: url("https://cdn.pixabay.com/photo/2022/03/01/02/51/galaxy-7040416__480.png");
+    background-color: rgba(0, 0, 0, 0.2);
+    background-blend-mode: darken;
+    background-position: center;
+    background-size: cover;
+    aspect-ratio: 9/12;
+    padding: 20px;
+
+    &:nth-child(2) {
+      background-image: url("https://media.istockphoto.com/id/1367699775/photo/nft-non-fungible-token-golden-coins-falling-trendy-cryptocurrencies-and-coins-on-the.jpg?b=1&s=170667a&w=0&k=20&c=9oFb0ZEq_r2QfLVW-4JrYK7KI_8eUdhOCayCDXrSMg4=");
+    }
+  }
+}
