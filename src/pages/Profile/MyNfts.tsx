@@ -27,6 +27,7 @@ const MyNfts: React.FC<IMyNfts> = () => {
       Id: string
       owner: any
       nftAddress: string
+      details: string
     }[]
   >([])
 
@@ -45,12 +46,13 @@ const MyNfts: React.FC<IMyNfts> = () => {
       const result1 = await Promise.all(
         Array.from({ length: totalIdsNft1 }).map(async (_, id) => {
           const address = await nftContract1.ownerOf(id)
-
-          console.log(address)
+          const details = await nftContract1.tokenURI(id)
+          console.log(details)
           return {
             Id: id.toString(),
             owner: address,
             nftAddress: NFT1Address,
+            details: details,
           }
         }),
       )
@@ -65,12 +67,14 @@ const MyNfts: React.FC<IMyNfts> = () => {
       const result = await Promise.all(
         Array.from({ length: totalIds }).map(async (_, id) => {
           const address = await contract.ownerOf(id)
+          const details = await contract.tokenURI(id)
 
-          console.log(address)
+          console.log(details)
           return {
             Id: id.toString(),
             owner: address,
             nftAddress: NFT2Address,
+            details: details,
           }
         }),
       )
@@ -130,19 +134,6 @@ const MyNfts: React.FC<IMyNfts> = () => {
 
   return (
     <div className="card_wrapper">
-      {/* {nftData?.map((data, i) => (
-        <Card
-          key={i.toString()}
-          isApproved={isApproved}
-          refetchApprove={fetchApprove}
-          token_address={""}
-          token_id={""}
-          contract_type={""}
-          owner_of={""}
-          name={""}
-          symbol={""}
-        />
-      ))} */}
       {data.map((f, i) => (
         <Card
           key={i}
@@ -150,6 +141,7 @@ const MyNfts: React.FC<IMyNfts> = () => {
           refetchApprove={fetchApprove}
           token_address={f.nftAddress}
           token_id={f.Id}
+          details={f.details}
           contract_type={''}
           owner_of={f.owner}
           name={''}

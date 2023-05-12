@@ -40,3 +40,37 @@ export interface IUserNfts {
   name: string
   symbol: string
 }
+
+export interface ICollectionData {
+  contract_address: string
+  total: number
+  owners: string
+  volcro: string
+  volusdc: string
+  name: string
+  crofloor: number
+  img: string
+  usdcfloor: number
+  isVerified: boolean
+}
+
+export interface IAllCollection {
+  latestCollection?: ICollectionData[]
+  topCollection?: ICollectionData[]
+}
+
+export interface ICreateForm {
+  name: string
+  image: string
+  description: string
+  external_link: string
+  royaltyFee: string
+  totalSupply: string
+  isMultiple: boolean
+  attributes: IAttributes[]
+}
+
+export interface IImageFileProps {
+  file: File
+  url: string
+}

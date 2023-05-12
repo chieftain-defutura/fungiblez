@@ -40,12 +40,7 @@ const Main: React.FC<IMarketplaceMainProps> = ({
       const result = await Promise.all(
         Array.from({ length: totalAuctionIds }).map(async (_, id) => {
           const auctionInfo = await marketplaceContract.auctionInfo(id)
-          // const tokenDetails = await getTokenDetails(
-          //   address,
-          //   signerData,
-          //   auctionInfo.tokenaddress,
-          // );
-          console.log(auctionInfo.end.toString())
+
           return {
             auctionId: id.toString(),
             contractAddress: marketplaceContract.address,
@@ -73,7 +68,6 @@ const Main: React.FC<IMarketplaceMainProps> = ({
         }),
       )
 
-      console.log(result)
       setData(result.filter((f) => f.status !== IMarketplaceStatus.FINISHED))
     } catch (error) {
       console.log(error)
@@ -82,7 +76,6 @@ const Main: React.FC<IMarketplaceMainProps> = ({
     }
   }, [address, signerData])
 
-  console.log(data)
   useEffect(() => {
     getData()
   }, [getData])

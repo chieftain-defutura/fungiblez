@@ -1,3 +1,4 @@
+import { ICreateForm } from 'constants/types'
 import { ethers } from 'ethers'
 export const formatEther = (value: any, decimals = 18) => {
   return Number(ethers.utils.formatUnits(value.toString(), String(decimals)))
@@ -19,4 +20,16 @@ export const n6 = new Intl.NumberFormat('en-us', {
 export const formatLinks = (link: string) => {
   const lowercaseString = link.toLocaleLowerCase()
   return lowercaseString.split(' ').join('-')
+}
+
+export const getFormattedFormValues = (values: ICreateForm) => {
+  return {
+    name: values.name,
+    description: values.description,
+    external_link: values.external_link,
+    image: values.image,
+    attributes: values.attributes.filter(
+      (f) => f.trait_type !== '' && f.value !== '',
+    ),
+  }
 }

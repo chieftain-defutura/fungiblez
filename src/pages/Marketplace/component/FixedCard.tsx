@@ -26,7 +26,6 @@ const FixedCard: React.FC<IData> = ({
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
-  console.log(tokenaddress)
 
   const handleSale = async () => {
     if (!address || !signerData) return
