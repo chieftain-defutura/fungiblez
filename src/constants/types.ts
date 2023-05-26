@@ -63,11 +63,11 @@ export interface ICreateForm {
   name: string
   image: string
   description: string
-  external_link: string
-  royaltyFee: string
-  totalSupply: string
-  isMultiple: boolean
-  attributes: IAttributes[]
+  // external_link: string
+  // royaltyFee: string
+  // totalSupply: string
+  // isMultiple: boolean
+  // attributes: IAttributes[]
 }
 
 export interface IImageFileProps {

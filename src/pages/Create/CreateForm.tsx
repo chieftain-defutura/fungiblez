@@ -15,11 +15,11 @@ const initialState: ICreateForm = {
   name: '',
   image: '',
   description: '',
-  external_link: '',
-  royaltyFee: '',
-  totalSupply: '',
-  isMultiple: false,
-  attributes: [{ trait_type: '', value: '' }],
+  // external_link: '',
+  // royaltyFee: '',
+  // totalSupply: '',
+  // isMultiple: false,
+  // attributes: [{ trait_type: '', value: '' }],
 }
 
 const CreateForm: React.FC<{}> = () => {
@@ -30,19 +30,21 @@ const CreateForm: React.FC<{}> = () => {
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
-  console.log(objectCID)
+
+  console.log('image:', imageCID)
+  console.log('object:', objectCID)
 
   const handleSubmit = async (values: ICreateForm) => {
     if (!address || !signerData) return
     if (!image) return alert('upload image to mint.')
     try {
+      setTransaction({ loading: true, status: 'pending' })
       const file = image.file
       if (file) {
         try {
           const token = process.env.REACT_APP_WEB3STORAGE_TOKEN
 
           const storage = new Web3Storage({ token: token as string })
-
           const imageFile = image.file
           const cid = await storage.put([imageFile])
           const res = await storage.get(cid)
@@ -52,13 +54,13 @@ const CreateForm: React.FC<{}> = () => {
             setImageCID(file.cid)
           }
 
-          if (!imageCID) return
-
           const obj = {
             name: values.name,
             description: values.description,
             image: imageCID,
           }
+
+          console.log(obj)
           const blob = new Blob([JSON.stringify(obj)], {
             type: 'application/json',
           })
@@ -84,9 +86,9 @@ const CreateForm: React.FC<{}> = () => {
   }
 
   const handleMint = async (nftAddress: string) => {
-    try {
-      if (!signerData || !address) return
+    if (!signerData || !address) return
 
+    try {
       setTransaction({ loading: true, status: 'pending' })
 
       const mintContract = new ethers.Contract(
@@ -94,12 +96,12 @@ const CreateForm: React.FC<{}> = () => {
         nftAbi,
         signerData as any,
       )
-      const tx = await mintContract.createNFT(address, imageCID, objectCID)
+      const tx = await mintContract.mint(address, objectCID)
       await tx.wait()
       setTransaction({ loading: true, status: 'success' })
     } catch (error: any) {
       console.log(error.reason)
-      setTransaction({ loading: true, status: 'error', message: error.reason })
+      setTransaction({ loading: true, status: 'error', message: error })
     }
   }
 

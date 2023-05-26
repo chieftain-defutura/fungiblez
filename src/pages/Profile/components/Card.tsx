@@ -4,7 +4,7 @@ import { Button, LazyImage } from 'components'
 import { useAccount, useSigner } from 'wagmi'
 import { Web3Button } from '@web3modal/react'
 import PutOnSale from 'components/Modals/PutOnSale'
-import { MARKETPLACE_CONTRACT_ADDRESS } from 'utils/address'
+import { TransferManagerERC721 } from 'utils/address'
 import NFTAbi from '../../../utils/abi/nft.json'
 import { useTransactionModal } from 'hooks'
 import { ethers } from 'ethers'
@@ -58,7 +58,7 @@ const Card: React.FC<ICard> = (props) => {
         signerData as any,
       )
       const tx = await tokenContract.setApprovalForAll(
-        MARKETPLACE_CONTRACT_ADDRESS,
+        TransferManagerERC721,
         true,
       )
       await tx.wait()
