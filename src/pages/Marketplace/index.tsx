@@ -1,5 +1,5 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
-import { Web3Storage, getFilesFromPath } from 'web3.storage'
+import React, { ChangeEvent, useState } from 'react'
+import { Web3Storage } from 'web3.storage'
 import './Marketplace.scss'
 import Main from './Main'
 import { FilterLayout } from 'components'

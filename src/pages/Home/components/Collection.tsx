@@ -3,7 +3,7 @@ import React from 'react'
 import CardDetails from './CardDetails'
 import { ICollectionData } from 'constants/types'
 import { getEllipsisTxt } from 'helpers/formatters'
-import { CardLoader, LazyImage } from 'components'
+import { LazyImage } from 'components'
 import { Link } from 'react-router-dom'
 
 interface ICollectionProps {

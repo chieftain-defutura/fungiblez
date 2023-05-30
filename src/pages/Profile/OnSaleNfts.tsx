@@ -84,8 +84,10 @@ const OnSaleNfts = () => {
       {data.map((f, i) => (
         <>
           {marketplaceData.map(
-            (s) =>
-              s.userAddress === address && (
+            (s, i) =>
+              s.userAddress === f.owner &&
+              f.nftAddress === s.collectionAddress &&
+              f.Id === s.tokenId && (
                 <OnSaleFixedCard
                   key={i}
                   dataAsk={s.ask}

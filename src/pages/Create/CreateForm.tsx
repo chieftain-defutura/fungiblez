@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { useState } from 'react'
 import './CreateForm.scss'
 import { ICreateForm, IImageFileProps } from 'constants/types'
 import nftAbi from '../../utils/abi/nft.json'
@@ -24,7 +24,6 @@ const initialState: ICreateForm = {
 
 const CreateForm: React.FC<{}> = () => {
   const [image, setImage] = useState<IImageFileProps | null>(null)
-  const [isMultiple, setIsMultiple] = useState(false)
   const [imageCID, setImageCID] = useState('')
   const [objectCID, setObjectCID] = useState('')
   const { address } = useAccount()
@@ -132,11 +131,7 @@ const CreateForm: React.FC<{}> = () => {
         content={renderImageContent}
       />
 
-      <Form
-        initialState={initialState}
-        isMultiple={isMultiple}
-        handleSubmit={handleSubmit}
-      />
+      <Form initialState={initialState} handleSubmit={handleSubmit} />
       <div className="formcard_container">
         <Button onClick={() => handleMint(NFT1Address)}>mint nft 1</Button>
         <Button onClick={() => handleMint(NFT2Address)}>mint nft 2</Button>

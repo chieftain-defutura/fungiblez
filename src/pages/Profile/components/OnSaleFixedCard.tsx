@@ -26,7 +26,7 @@ interface IData {
     params: string
   }
 }
-const OnSaleFixedCard: React.FC<IData> = ({ tokenId, dataAsk }) => {
+const OnSaleFixedCard: React.FC<IData> = ({ tokenId }) => {
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
@@ -41,7 +41,7 @@ const OnSaleFixedCard: React.FC<IData> = ({ tokenId, dataAsk }) => {
         MintedABI,
         signerData as any,
       )
-      const tx = await contract.CancelAllOrders(address, dataAsk.nonce)
+      const tx = await contract.CancelAllOrders(address, 0)
       await tx.wait()
       console.log('added')
 

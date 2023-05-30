@@ -1,26 +1,25 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 // import { ReactComponent as HeartIcon } from "assets/icons/heart.svg";
-import { ReactComponent as CronosIcon } from "assets/icons/cronos.svg";
-import { ReactComponent as User } from "assets/icons/user-circle.svg";
-import { n6 } from "helpers/formatters";
+import { ReactComponent as CronosIcon } from 'assets/icons/cronos.svg'
+import { ReactComponent as User } from 'assets/icons/user-circle.svg'
+import { n6 } from 'helpers/formatters'
 
 interface ICardDetails {
-  image: string;
-  likes: number;
-  price: number;
-  collection_name: string;
-  owner: string;
+  image: string
+  likes: number
+  price: number
+  collection_name: string
+  owner: string
 }
 
 const CardDetails: React.FC<ICardDetails> = ({
   image,
-  likes,
   price,
   collection_name,
   owner,
 }) => {
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(false)
 
   return (
     <div className="flex-between">
@@ -31,13 +30,13 @@ const CardDetails: React.FC<ICardDetails> = ({
           <img
             src={image}
             onError={() => setError(true)}
-            alt={"nft collection"}
-            style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+            alt={'nft collection'}
+            style={{ width: '30px', height: '30px', borderRadius: '50%' }}
           />
         )}
         <div>
           <p className="font-regular">{collection_name}</p>
-          <p style={{ fontSize: "12px" }}>{owner}</p>
+          <p style={{ fontSize: '12px' }}>{owner}</p>
         </div>
       </div>
       <div>
@@ -51,7 +50,7 @@ const CardDetails: React.FC<ICardDetails> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CardDetails;
+export default CardDetails

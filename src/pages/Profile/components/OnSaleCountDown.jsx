@@ -1,13 +1,12 @@
-import React from "react";
-import { Button } from "components";
-import ReactCountdown from "react-countdown";
+import { Button } from 'components'
+import ReactCountdown from 'react-countdown'
 
 const OnSaleCountDown = ({
   handleFinishAuction,
   handleRemoveSale,
   endTime,
 }) => {
-  console.log(endTime);
+  console.log(endTime)
   const renderer = ({ completed, days, minutes, seconds, hours }) => {
     if (completed) {
       return (
@@ -19,7 +18,7 @@ const OnSaleCountDown = ({
             </div>
           </div>
         </>
-      );
+      )
     } else {
       return (
         <>
@@ -33,11 +32,11 @@ const OnSaleCountDown = ({
             <Button onClick={handleRemoveSale}>Remove Sale</Button>
           </div>
         </>
-      );
+      )
     }
-  };
+  }
 
-  return <ReactCountdown date={Number(endTime)} renderer={renderer} />;
-};
+  return <ReactCountdown date={Number(endTime)} renderer={renderer} />
+}
 
-export default OnSaleCountDown;
+export default OnSaleCountDown

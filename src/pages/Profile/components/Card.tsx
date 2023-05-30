@@ -1,19 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { IUserNfts } from 'constants/types'
 import { Button, LazyImage } from 'components'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { Web3Button } from '@web3modal/react'
 import PutOnSale from 'components/Modals/PutOnSale'
-import { getNetwork } from '@wagmi/core'
-import { COLLECTION, MINTED_EXCHANGE, WCRO } from 'utils/address'
-import NFTAbi from '../../../utils/abi/nft.json'
-import { useTransactionModal } from 'hooks'
-import { ethers } from 'ethers'
+// import { useTransactionModal } from 'hooks'
 import axios from 'axios'
-
-const STRATEGY = '0xFDf3998212001B84cbdD12426E77913bb486db57'
-const NONCE = 0
-const TOKENID = 0
 
 interface ICard extends IUserNfts {
   isApproved: {
@@ -25,22 +17,21 @@ interface ICard extends IUserNfts {
 }
 
 const Card: React.FC<ICard> = (props) => {
-  const { chain } = getNetwork()
-  const { data: signerData } = useSigner()
-  const { token_id, refetchApprove, isApproved, token_address, details } = props
-  const { setTransaction } = useTransactionModal()
+  // const { data: signerData } = useSigner()
+  const { token_id, token_address, details } = props
+  // const { setTransaction } = useTransactionModal()
   const [detailsData, setDetailsData] = useState<{
     name: string
     description: string
     image: string
   }>()
   const [open, setOpen] = useState(false)
-  const [sign, setSign] = useState('')
+  // const [sign, setSign] = useState('')
   const { address } = useAccount()
 
-  const nftApproved = isApproved.find(
-    (s) => s.nftAddress.toLowerCase() === token_address.toLocaleLowerCase(),
-  )
+  // const nftApproved = isApproved.find(
+  //   (s) => s.nftAddress.toLowerCase() === token_address.toLocaleLowerCase(),
+  // )
 
   const getData = useCallback(async () => {
     const { data } = await axios.get(`https://ipfs.io/ipfs/${details}`)
@@ -84,105 +75,105 @@ const Card: React.FC<ICard> = (props) => {
   //   }
   // }
 
-  const handleSignInPermit = async () => {
-    const chainId = chain?.id
-    const from = address
+  // const handleSignInPermit = async () => {
+  //   const chainId = chain?.id
+  //   const from = address
 
-    console.log(chainId)
+  //   console.log(chainId)
 
-    const domain = {
-      name: 'MintedExchange',
-      version: '1',
-      chainId: chainId,
-      verifyingContract: MINTED_EXCHANGE,
-    }
+  //   const domain = {
+  //     name: 'MintedExchange',
+  //     version: '1',
+  //     chainId: chainId,
+  //     verifyingContract: MINTED_EXCHANGE,
+  //   }
 
-    const EIP712Domain = [
-      { name: 'name', type: 'string' },
-      { name: 'version', type: 'string' },
-      { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' },
-    ]
+  //   const EIP712Domain = [
+  //     { name: 'name', type: 'string' },
+  //     { name: 'version', type: 'string' },
+  //     { name: 'chainId', type: 'uint256' },
+  //     { name: 'verifyingContract', type: 'address' },
+  //   ]
 
-    const permit = {
-      isOrderAsk: true,
-      signer: from,
-      collection: COLLECTION,
-      // price: ethers.utils.parseEther('1.99').toString(),
-      tokenId: TOKENID,
-      amount: 1,
-      strategy: STRATEGY,
-      currency: WCRO,
-      nonce: NONCE,
-      startTime: 1684824393,
-      endTime: 1687416368,
-      minPercentageToAsk: 8500,
-      params: '0x',
-    }
+  //   const permit = {
+  //     isOrderAsk: true,
+  //     signer: from,
+  //     collection: COLLECTION,
+  //     // price: ethers.utils.parseEther('1.99').toString(),
+  //     tokenId: TOKENID,
+  //     amount: 1,
+  //     strategy: STRATEGY,
+  //     currency: WCRO,
+  //     nonce: NONCE,
+  //     startTime: 1684824393,
+  //     endTime: 1687416368,
+  //     minPercentageToAsk: 8500,
+  //     params: '0x',
+  //   }
 
-    const Permit = [
-      { name: 'isOrderAsk', type: 'bool' },
-      { name: 'signer', type: 'address' },
-      { name: 'collection', type: 'address' },
-      { name: 'price', type: 'uint256' },
-      { name: 'tokenId', type: 'uint256' },
-      { name: 'amount', type: 'uint256' },
-      { name: 'strategy', type: 'address' },
-      { name: 'currency', type: 'address' },
-      { name: 'nonce', type: 'uint256' },
-      { name: 'startTime', type: 'uint256' },
-      { name: 'endTime', type: 'uint256' },
-      { name: 'minPercentageToAsk', type: 'uint256' },
-      { name: 'params', type: 'string' },
-    ]
+  //   const Permit = [
+  //     { name: 'isOrderAsk', type: 'bool' },
+  //     { name: 'signer', type: 'address' },
+  //     { name: 'collection', type: 'address' },
+  //     { name: 'price', type: 'uint256' },
+  //     { name: 'tokenId', type: 'uint256' },
+  //     { name: 'amount', type: 'uint256' },
+  //     { name: 'strategy', type: 'address' },
+  //     { name: 'currency', type: 'address' },
+  //     { name: 'nonce', type: 'uint256' },
+  //     { name: 'startTime', type: 'uint256' },
+  //     { name: 'endTime', type: 'uint256' },
+  //     { name: 'minPercentageToAsk', type: 'uint256' },
+  //     { name: 'params', type: 'string' },
+  //   ]
 
-    const splitSig = (sig: string) => {
-      const pureSig = sig.replace('0x', '')
+  //   const splitSig = (sig: string) => {
+  //     const pureSig = sig.replace('0x', '')
 
-      const _r = Buffer.from(pureSig.substring(0, 64), 'hex')
-      const _s = Buffer.from(pureSig.substring(64, 128), 'hex')
-      const _v = Buffer.from(
-        parseInt(pureSig.substring(128, 130), 16).toString(),
-      )
+  //     const _r = Buffer.from(pureSig.substring(0, 64), 'hex')
+  //     const _s = Buffer.from(pureSig.substring(64, 128), 'hex')
+  //     const _v = Buffer.from(
+  //       parseInt(pureSig.substring(128, 130), 16).toString(),
+  //     )
 
-      return { _r, _s, _v }
-    }
+  //     return { _r, _s, _v }
+  //   }
 
-    let sign
-    let r
-    let s
-    let v
+  //   let sign
+  //   let r
+  //   let s
+  //   let v
 
-    const msgParams = {
-      types: {
-        EIP712Domain,
-        Permit,
-      },
-      primaryType: 'Permit',
-      domain,
-      message: permit,
-    }
+  //   const msgParams = {
+  //     types: {
+  //       EIP712Domain,
+  //       Permit,
+  //     },
+  //     primaryType: 'Permit',
+  //     domain,
+  //     message: permit,
+  //   }
 
-    const ethereum = window.ethereum as any
+  //   const ethereum = window.ethereum as any
 
-    try {
-      sign = await ethereum.request({
-        method: 'eth_signTypedData_v4',
-        params: [from, JSON.stringify(msgParams)],
-      })
-      const { _r, _s, _v } = splitSig(sign)
-      r = `0x${_r.toString('hex')}`
-      s = `0x${_s.toString('hex')}`
-      v = _v.toString()
-      setSign(sign)
-      console.log(sign)
-      console.log(`r: ${r}`)
-      console.log(`s: ${s}`)
-      console.log(`v: ${v}`)
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  //   try {
+  //     sign = await ethereum.request({
+  //       method: 'eth_signTypedData_v4',
+  //       params: [from, JSON.stringify(msgParams)],
+  //     })
+  //     const { _r, _s, _v } = splitSig(sign)
+  //     r = `0x${_r.toString('hex')}`
+  //     s = `0x${_s.toString('hex')}`
+  //     v = _v.toString()
+  //     // setSign(sign)
+  //     console.log(sign)
+  //     console.log(`r: ${r}`)
+  //     console.log(`s: ${s}`)
+  //     console.log(`v: ${v}`)
+  //   } catch (err) {
+  //     console.error(err)
+  //   }
+  // }
 
   return (
     <div className="nft_card">

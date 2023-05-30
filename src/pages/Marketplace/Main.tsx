@@ -1,13 +1,12 @@
 import React, { useEffect, useCallback, useState } from 'react'
-import { IContractType, IMarketplaceStatus, ISaleType } from 'constants/types'
-import { formatEther } from 'helpers/formatters'
-import AuctionCard from './component/AuctionCard'
+// import { IContractType, IMarketplaceStatus, ISaleType } from 'constants/types'
+// import { formatEther } from 'helpers/formatters'
 import FixedCard from './component/FixedCard'
 import { CardLoader } from 'components'
 import { useAccount, useSigner } from 'wagmi'
 
 import NFTAbi from '../../utils/abi/nft.json'
-import marketplaceabi from 'utils/abi/marketplace.json'
+// import marketplaceabi from 'utils/abi/marketplace.json'
 import { ethers } from 'ethers'
 import axios from 'axios'
 import { NFT1Address, NFT2Address } from 'utils/address'
@@ -17,10 +16,7 @@ interface IMarketplaceMainProps {
   searchInput: string
 }
 
-const Main: React.FC<IMarketplaceMainProps> = ({
-  selectedFilter,
-  searchInput,
-}) => {
+const Main: React.FC<IMarketplaceMainProps> = () => {
   const { data: signerData } = useSigner()
   const { address } = useAccount()
   const [loading, setLoading] = useState(false)
@@ -180,6 +176,7 @@ const Main: React.FC<IMarketplaceMainProps> = ({
                   key={i}
                   status=""
                   tokenId={f.Id}
+                  details={f.details}
                   owner={f.owner}
                   dataAsk={s.ask}
                   dataOrderHash={s.orderHash}

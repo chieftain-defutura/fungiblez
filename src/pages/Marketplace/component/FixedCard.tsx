@@ -1,16 +1,18 @@
 import { Button, LazyImage } from 'components'
 import { ethers } from 'ethers'
 import { useTransactionModal } from 'hooks'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 // import { MARKETPLACE_CONTRACT_ADDRESS } from 'utils/address'
 import MintedABI from '../../../utils/abi/minted.json'
 import { useAccount, useSigner } from 'wagmi'
 import TokenAbi from '../../../utils/abi/token.json'
 import { MINTED_EXCHANGE, WCRO } from 'utils/address'
+import axios from 'axios'
 
 interface IData {
   tokenId: string
   owner: string
+  details: any
   status: string
   dataAsk: {
     isOrderAsk: boolean
@@ -39,10 +41,16 @@ const FixedCard: React.FC<IData> = ({
   status,
   dataAsk,
   dataOrderHash,
+  details,
 }) => {
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
+  const [detailsData, setDetailsData] = useState<{
+    name: string
+    description: string
+    image: string
+  }>()
 
   // console.log(dataAsk)
   // console.log(dataOrderHash)
@@ -94,6 +102,16 @@ const FixedCard: React.FC<IData> = ({
   //   }
   // }
 
+  const getData = useCallback(async () => {
+    const { data } = await axios.get(`https://ipfs.io/ipfs/${details}`)
+    setDetailsData(data)
+    console.log(data)
+  }, [details])
+
+  useEffect(() => {
+    getData()
+  }, [getData])
+
   const handleWCRO = async () => {
     if (!address || !signerData) return
 
@@ -106,17 +124,11 @@ const FixedCard: React.FC<IData> = ({
         signerData as any,
       )
 
-      const allowance = Number(
-        (await erc20Contract.allowance(address, MINTED_EXCHANGE)).toString(),
+      const erc20tx = await erc20Contract.increaseAllowance(
+        MINTED_EXCHANGE,
+        ethers.constants.MaxUint256,
       )
-      console.log(allowance)
-      if (allowance <= 0) {
-        const tx = await erc20Contract.approve(
-          MINTED_EXCHANGE,
-          ethers.constants.MaxUint256,
-        )
-        await tx.wait()
-      }
+      await erc20tx.wait()
 
       const contract = new ethers.Contract(
         MINTED_EXCHANGE,
@@ -207,6 +219,8 @@ const FixedCard: React.FC<IData> = ({
           dataOrderHash.r,
           dataOrderHash.s,
         ],
+
+        { value: ethers.utils.parseEther(`${dataAsk.price}`).toString() },
       )
       await tx.wait()
       console.log('saled')
@@ -232,7 +246,9 @@ const FixedCard: React.FC<IData> = ({
         </div>
         <div className="nft_card-container_content">
           <div>
-            <h3 style={{ fontSize: '3.2rem', lineHeight: '3.2rem' }}>name</h3>
+            <h3 style={{ fontSize: '3.2rem', lineHeight: '3.2rem' }}>
+              {detailsData?.name}
+            </h3>
           </div>
           <div>
             {/* <p>

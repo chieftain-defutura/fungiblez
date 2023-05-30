@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Backdrop from '../Backdrop'
 import { AnimatePresence, motion } from 'framer-motion'
 import ModalHeader from '../ModalHeader'
-import Button from 'components/Button'
 import './PutOnSale.scss'
 import FixedSaleForm from './component/FixedSaleForm'
-import AuctionForm from './component/AuctionForm'
 
 interface IPutOnSaleModal {
   modal: boolean

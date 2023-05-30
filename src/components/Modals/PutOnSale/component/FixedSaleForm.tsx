@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Button from 'components/Button'
 import { Field, Form, Formik } from 'formik'
 import { useAccount, useSigner } from 'wagmi'
@@ -6,8 +6,7 @@ import { ethers } from 'ethers'
 import * as Yup from 'yup'
 
 import { useTransactionModal } from 'hooks'
-import MintedABI from '../../../../utils/abi/minted.json'
-import { parseUnits } from 'ethers/lib/utils.js'
+
 import { COLLECTION, MINTED_EXCHANGE, STRATEGY, WCRO } from 'utils/address'
 import axios from 'axios'
 
@@ -140,6 +139,10 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
       r = `0x${_r.toString('hex')}`
       s = `0x${_s.toString('hex')}`
       v = _v.toString()
+
+      console.log(r)
+      console.log(s)
+      console.log(v)
 
       // storing data in database
       const data = await axios.post(

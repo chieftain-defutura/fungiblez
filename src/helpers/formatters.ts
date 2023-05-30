@@ -26,10 +26,10 @@ export const getFormattedFormValues = (values: ICreateForm) => {
   return {
     name: values.name,
     description: values.description,
-    external_link: values.external_link,
+    // external_link: values.external_link,
     image: values.image,
-    attributes: values.attributes.filter(
-      (f) => f.trait_type !== '' && f.value !== '',
-    ),
+    // attributes: values.attributes.filter(
+    //   (f) => f.trait_type !== '' && f.value !== '',
+    // ),
   }
 }

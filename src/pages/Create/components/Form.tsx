@@ -1,27 +1,20 @@
-import React, { ChangeEvent, useState } from 'react'
-import { Formik, Form as FormikForm, FieldArray } from 'formik'
-import nftAbi from '../../../utils/abi/nft.json'
+import React from 'react'
+import { Formik, Form as FormikForm } from 'formik'
+// import nftAbi from '../../../utils/abi/nft.json'
 import { Button, TextField } from 'components'
-import {
-  validateMultiCollectionSchema,
-  validateSingleCollectionSchema,
-} from '../../../helpers/ValidationSchema'
-import { useTransactionModal } from 'hooks'
-import { useAccount, useSigner } from 'wagmi'
-import { ethers } from 'ethers'
-import { NFT1Address, NFT2Address } from 'utils/address'
-import { ICreateForm } from 'constants/types'
+import { validateSingleCollectionSchema } from '../../../helpers/ValidationSchema'
+// import { useTransactionModal } from 'hooks'
+// import { useAccount, useSigner } from 'wagmi'
 
 interface IForm {
   initialState: any
-  isMultiple: boolean
   handleSubmit: (values: any, actions: any) => Promise<void>
 }
 
-const Form: React.FC<IForm> = ({ initialState, isMultiple, handleSubmit }) => {
-  const { address } = useAccount()
-  const { data: signerData } = useSigner()
-  const { setTransaction } = useTransactionModal()
+const Form: React.FC<IForm> = ({ initialState, handleSubmit }) => {
+  // const { address } = useAccount()
+  // const { data: signerData } = useSigner()
+  // const { setTransaction } = useTransactionModal()
 
   // const handleMint = async (nftAddress: string) => {
   //   try {
@@ -46,11 +39,7 @@ const Form: React.FC<IForm> = ({ initialState, isMultiple, handleSubmit }) => {
   return (
     <Formik
       initialValues={initialState}
-      validationSchema={
-        isMultiple
-          ? validateMultiCollectionSchema
-          : validateSingleCollectionSchema
-      }
+      validationSchema={validateSingleCollectionSchema}
       onSubmit={handleSubmit}
     >
       {({ isSubmitting }) => (
