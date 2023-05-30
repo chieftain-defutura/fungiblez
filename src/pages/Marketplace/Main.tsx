@@ -10,6 +10,7 @@ import NFTAbi from '../../utils/abi/nft.json'
 import { ethers } from 'ethers'
 import axios from 'axios'
 import { NFT1Address, NFT2Address } from 'utils/address'
+import { baseURL } from 'api'
 
 interface IMarketplaceMainProps {
   selectedFilter: string | null
@@ -87,9 +88,7 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
     try {
       if (!address || !signerData) return
 
-      const { data } = await axios.get(
-        'http://localhost:8001/api/v1/marketplace/',
-      )
+      const { data } = await axios.get(`${baseURL}/marketplace/`)
 
       setMarketplaceData(data)
 

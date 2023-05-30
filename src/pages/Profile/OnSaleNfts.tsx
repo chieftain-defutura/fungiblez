@@ -6,6 +6,7 @@ import axios from 'axios'
 import { ethers } from 'ethers'
 import { NFT1Address, NFT2Address } from 'utils/address'
 import NFTAbi from '../../utils/abi/nft.json'
+import { baseURL } from 'api'
 
 const OnSaleNfts = () => {
   const [data, setData] = useState<any[]>([])
@@ -20,9 +21,7 @@ const OnSaleNfts = () => {
     try {
       if (!address || !signerData) return
 
-      const { data } = await axios.get(
-        'http://localhost:8001/api/v1/marketplace/',
-      )
+      const { data } = await axios.get(`${baseURL}/marketplace/`)
       console.log(data)
       setMarketplaceData(data)
 

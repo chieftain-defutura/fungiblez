@@ -9,6 +9,7 @@ import { useTransactionModal } from 'hooks'
 
 import { COLLECTION, MINTED_EXCHANGE, STRATEGY, WCRO } from 'utils/address'
 import axios from 'axios'
+import { baseURL } from 'api'
 
 // const tokensLists = [
 //   {
@@ -145,35 +146,32 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
       console.log(v)
 
       // storing data in database
-      const data = await axios.post(
-        'http://localhost:8001/api/v1/marketplace/create',
-        {
-          userAddress: address,
-          status: 'pending',
+      const data = await axios.post(`${baseURL}/marketplace/create`, {
+        userAddress: address,
+        status: 'pending',
+        tokenId: id,
+        collectionAddress: nftAddress,
+        ask: {
+          isOrderAsk: true,
+          signer: address,
+          collection: COLLECTION,
+          price: ethers.utils.parseEther(`${values.amount}`).toString(),
           tokenId: id,
-          collectionAddress: nftAddress,
-          ask: {
-            isOrderAsk: true,
-            signer: address,
-            collection: COLLECTION,
-            price: ethers.utils.parseEther(`${values.amount}`).toString(),
-            tokenId: id,
-            amount: 1,
-            strategy: STRATEGY,
-            currency: WCRO,
-            nonce: 0,
-            startTime: 1684824393,
-            endTime: 1687416368,
-            minPercentageToAsk: 8500,
-            params: '0x',
-          },
-          orderHash: {
-            r: `0x${_r.toString('hex')}`,
-            s: `0x${_s.toString('hex')}`,
-            v: _v.toString(),
-          },
+          amount: 1,
+          strategy: STRATEGY,
+          currency: WCRO,
+          nonce: 0,
+          startTime: 1684824393,
+          endTime: 1687416368,
+          minPercentageToAsk: 8500,
+          params: '0x',
         },
-      )
+        orderHash: {
+          r: `0x${_r.toString('hex')}`,
+          s: `0x${_s.toString('hex')}`,
+          v: _v.toString(),
+        },
+      })
       console.log(data)
 
       //token generating
