@@ -7,7 +7,7 @@ import {
   // MARKETPLACE_CONTRACT_ADDRESS,
   NFT1Address,
   NFT2Address,
-  TransferManagerERC721,
+  TRANSFER_MANAGER_ERC721,
 } from 'utils/address'
 import { CardLoader } from 'components'
 
@@ -132,7 +132,7 @@ const MyNfts: React.FC<IMyNfts> = () => {
 
         const value = await nftContract.setApprovalForAll(
           address,
-          TransferManagerERC721,
+          TRANSFER_MANAGER_ERC721,
         )
         return {
           nftAddress: f,

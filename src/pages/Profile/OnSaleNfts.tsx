@@ -1,69 +1,74 @@
-import { ethers } from 'ethers'
 import React, { useCallback, useEffect, useState } from 'react'
-import { MARKETPLACE_CONTRACT_ADDRESS } from 'utils/address'
+// import { MARKETPLACE_CONTRACT_ADDRESS } from 'utils/address'c
 import { useAccount, useSigner } from 'wagmi'
-import marketplaceabi from 'utils/abi/marketplace.json'
-import { IContractType, IMarketplaceStatus, ISaleType } from 'constants/types'
-import { formatEther } from 'helpers/formatters'
 import OnSaleFixedCard from './components/OnSaleFixedCard'
-import OnSaleAuctionCard from './components/OnSaleAuctionCard'
+import axios from 'axios'
+import { ethers } from 'ethers'
+import { NFT1Address, NFT2Address } from 'utils/address'
+import NFTAbi from '../../utils/abi/nft.json'
 
 const OnSaleNfts = () => {
   const [data, setData] = useState<any[]>([])
+  const [marketplaceData, setMarketplaceData] = useState<any[]>([])
   const { data: signerData } = useSigner()
   const { address } = useAccount()
+
+  console.log(data)
+  console.log(marketplaceData)
 
   const getData = useCallback(async () => {
     try {
       if (!address || !signerData) return
 
-      const marketplaceContract = new ethers.Contract(
-        MARKETPLACE_CONTRACT_ADDRESS,
-        marketplaceabi,
+      const { data } = await axios.get(
+        'http://localhost:8001/api/v1/marketplace/',
+      )
+      console.log(data)
+      setMarketplaceData(data)
+
+      const nftContract1 = new ethers.Contract(
+        NFT1Address,
+        NFTAbi,
         signerData as any,
       )
 
-      const totalConductedAuctionIds =
-        await marketplaceContract.conductedAuctions(address)
+      const totalIdsNft1 = Number((await nftContract1.totalSupply()).toString())
 
-      console.log(totalConductedAuctionIds.map((f: any) => f.toString()))
+      const result1 = await Promise.all(
+        Array.from({ length: totalIdsNft1 }).map(async (_, id) => {
+          const address = await nftContract1.ownerOf(id)
+          const details = await nftContract1.tokenURI(id)
+          return {
+            Id: id.toString(),
+            owner: address,
+            nftAddress: NFT1Address,
+            details: details,
+          }
+        }),
+      )
+
+      const nft2contract = new ethers.Contract(
+        NFT2Address,
+        NFTAbi,
+        signerData as any,
+      )
+
+      const totalIds = Number((await nft2contract.totalSupply()).toString())
       const result = await Promise.all(
-        totalConductedAuctionIds
-          .map((i: any) => i.toString())
-          .map(async (id: string) => {
-            const auctionInfo = await marketplaceContract.auctionInfo(id)
+        Array.from({ length: totalIds }).map(async (_, id) => {
+          const address = await nft2contract.ownerOf(id)
+          const details = await nft2contract.tokenURI(id)
 
-            return {
-              auctionId: id.toString(),
-              contractAddress: marketplaceContract.address,
-              tokenId: auctionInfo.tokenId.toString(),
-              owner: auctionInfo.auctioner,
-              heighestBidder: auctionInfo.highestBidder,
-              heighestBid: formatEther(auctionInfo.highestBid.toString()),
-              saleType:
-                auctionInfo.saleType.toString() === '0'
-                  ? ISaleType.AUCTION
-                  : ISaleType.FIXED_SALE,
-              status:
-                auctionInfo.status.toString() === '0'
-                  ? IMarketplaceStatus.LIVE
-                  : IMarketplaceStatus.FINISHED,
-              start: Number(auctionInfo.start.toString()) * 1000,
-              end: Number(auctionInfo.end.toString()) * 1000,
-              prevBidAmounts: auctionInfo.prevBidAmounts,
-              prevBidders: auctionInfo.prevBidders,
-              tokenAddress: auctionInfo.tokenaddress,
-              contractType: IContractType.ERC721,
-              // ...tokenDetails,
-              erc721TokenAddress: auctionInfo.tokencontract,
-            }
-          }),
+          console.log(details)
+          return {
+            Id: id.toString(),
+            owner: address,
+            nftAddress: NFT2Address,
+            details: details,
+          }
+        }),
       )
-
-      setData(result.filter((f) => f.status !== IMarketplaceStatus.FINISHED))
-      console.log(
-        result.filter((f) => f.status !== IMarketplaceStatus.FINISHED),
-      )
+      setData([...result1, ...result])
     } catch (error) {
       console.log(error)
     }
@@ -78,28 +83,17 @@ const OnSaleNfts = () => {
     <div className="card_wrapper">
       {data.map((f, i) => (
         <>
-          {f.saleType === 'FIXED_SALE' && (
-            <OnSaleFixedCard
-              key={i}
-              auctionId={f.auctionId}
-              heighestBid={f.heighestBid}
-              tokenId={f.tokenId}
-              tokenaddress={f.tokenAddress}
-              owner={f.owner}
-              status={f.status}
-            />
-          )}
-          {f.saleType === 'AUCTION' && (
-            <OnSaleAuctionCard
-              key={i}
-              auctionId={f.auctionId}
-              heighestBid={f.heighestBid}
-              tokenId={f.tokenId}
-              tokenaddress={f.tokenAddress}
-              owner={f.owner}
-              status={f.status}
-              endTime={f.end}
-            />
+          {marketplaceData.map(
+            (s) =>
+              s.userAddress === address && (
+                <OnSaleFixedCard
+                  key={i}
+                  dataAsk={s.ask}
+                  tokenId={s.tokenId}
+                  owner={f.owner}
+                  status={f.status}
+                />
+              ),
           )}
         </>
       ))}

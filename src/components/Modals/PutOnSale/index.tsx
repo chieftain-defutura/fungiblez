@@ -20,7 +20,7 @@ const PutOnSale: React.FC<IPutOnSaleModal> = ({
   id,
   nftAddress,
 }) => {
-  const [putOnSaleOpen, setPutOnSaleOpen] = useState('')
+  // const [putOnSaleOpen, setPutOnSaleOpen] = useState('')
 
   return (
     <Backdrop handleClose={() => handleClose(false)} isOpen={modal}>
@@ -38,7 +38,7 @@ const PutOnSale: React.FC<IPutOnSaleModal> = ({
                 title="Put On Sale"
                 handleClose={() => handleClose(false)}
               />
-              {!putOnSaleOpen && (
+              {/* {!putOnSaleOpen && (
                 <>
                   <div>
                     <Button
@@ -57,19 +57,19 @@ const PutOnSale: React.FC<IPutOnSaleModal> = ({
                     </Button>
                   </div>
                 </>
-              )}
+              )} */}
               <div>
-                {putOnSaleOpen === 'fixedSale' && (
-                  <FixedSaleForm
-                    nftAddress={nftAddress}
-                    id={id}
-                    setPutOnSaleOpen={setPutOnSaleOpen}
-                    modal={modal}
-                  />
-                )}
+                {/* {putOnSaleOpen === 'fixedSale' && ( */}
+                <FixedSaleForm
+                  nftAddress={nftAddress}
+                  id={id}
+                  modal={modal}
+                  handleClose={handleClose}
+                />
+                {/* )} */}
               </div>
 
-              <div>
+              {/* <div>
                 {putOnSaleOpen === 'auction' && (
                   <AuctionForm
                     setPutOnSaleOpen={setPutOnSaleOpen}
@@ -77,7 +77,7 @@ const PutOnSale: React.FC<IPutOnSaleModal> = ({
                     nftaddress={nftAddress}
                   />
                 )}
-              </div>
+              </div> */}
             </div>
           </motion.div>
         )}
