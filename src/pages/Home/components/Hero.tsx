@@ -19,7 +19,7 @@ const Hero: React.FC = () => {
         <div className="hero_wrapper-content">
           <h1>Discover, collect, and sell extraordinary NFTs</h1>
           <p className="mb-16 mt-16">
-            UngibleZ is the world's first and largest NFT marketplace
+            Fungiblez is the world's first and largest NFT marketplace
           </p>
           <div className="flex g-25 mb-32">
             <Link to="/create">
@@ -33,7 +33,7 @@ const Hero: React.FC = () => {
             <div className="flex g-32">
               <a
                 className="social_icon"
-                href="https://t.me/UngibleZ_Ann"
+                href="https://t.me/Fungiblez_Ann"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -41,7 +41,7 @@ const Hero: React.FC = () => {
               </a>
               <a
                 className="social_icon"
-                href="https://twitter.com/ungiblez_"
+                href="https://twitter.com/Fungiblez_"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -49,7 +49,7 @@ const Hero: React.FC = () => {
               </a>
               <a
                 className="social_icon"
-                href="https://medium.com/@UngibleZ"
+                href="https://medium.com/@Fungiblez"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -57,7 +57,7 @@ const Hero: React.FC = () => {
               </a>
               <a
                 className="social_icon"
-                href="https://github.com/UngibleZ"
+                href="https://github.com/Fungiblez"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -65,7 +65,7 @@ const Hero: React.FC = () => {
               </a>
               <a
                 className="social_icon"
-                href="https://docs.ungiblez.live/guides/introduction"
+                href="https://docs.Fungiblez.live/guides/introduction"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -73,7 +73,7 @@ const Hero: React.FC = () => {
               </a>
               <a
                 className="social_icon"
-                href="https://t.me/UngibleZ_chat"
+                href="https://t.me/Fungiblez_chat"
                 target="_blank"
                 rel="noopener noreferrer"
               >

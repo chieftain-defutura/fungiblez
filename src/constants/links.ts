@@ -11,7 +11,7 @@ export const upcomingLinks = [
 ]
 
 export const footerlinks = [
-  { name: 'Contact us', to: 'mailto:support@ungiblez.live' },
+  { name: 'Contact us', to: 'mailto:support@Fungiblez.live' },
   {
     name: 'Partnership with us',
     to: 'https://docs.google.com/forms/d/e/1FAIpQLSfMxwIisJBw4Omipz2-cJ2FbPRYIOubhPsIsghy6t7a6V7eEg/viewform',

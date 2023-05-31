@@ -34,7 +34,7 @@ const Footer = () => {
           <div className="flex g-32">
             <a
               className="social_icon"
-              href="https://t.me/UngibleZ_Ann"
+              href="https://t.me/Fungiblez_Ann"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -42,7 +42,7 @@ const Footer = () => {
             </a>
             <a
               className="social_icon"
-              href="https://twitter.com/ungiblez_"
+              href="https://twitter.com/Fungiblez_"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -50,7 +50,7 @@ const Footer = () => {
             </a>
             <a
               className="social_icon"
-              href="https://medium.com/@UngibleZ"
+              href="https://medium.com/@Fungiblez"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -58,7 +58,7 @@ const Footer = () => {
             </a>
             <a
               className="social_icon"
-              href="https://github.com/UngibleZ"
+              href="https://github.com/Fungiblez"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -66,7 +66,7 @@ const Footer = () => {
             </a>
             <a
               className="social_icon"
-              href="https://docs.ungiblez.live/guides/introduction"
+              href="https://docs.Fungiblez.live/guides/introduction"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -74,7 +74,7 @@ const Footer = () => {
             </a>
             <a
               className="social_icon"
-              href="https://t.me/UngibleZ_chat"
+              href="https://t.me/Fungiblez_chat"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -82,7 +82,7 @@ const Footer = () => {
             </a>
           </div>
         </nav>
-        <section className="copyrights">Copyright 2022 UngibleZ</section>
+        <section className="copyrights">Copyright 2022 Fungiblez</section>
       </div>
     </div>
   )

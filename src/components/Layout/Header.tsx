@@ -44,7 +44,7 @@ const Header: React.FC<{
 
   const renderBanner = (
     <div className="header_banner pad">
-      <h2>UngibleZ platform is on beta version</h2>
+      <h2>Fungiblez platform is on beta version</h2>
       <div className="close" onClick={() => setOpenBanner(false)}>
         <Close />
       </div>
