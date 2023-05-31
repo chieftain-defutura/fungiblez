@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 // import { ReactComponent as HeartIcon } from "assets/icons/heart.svg";
-import { ReactComponent as CronosIcon } from 'assets/icons/cronos.svg'
+import { ReactComponent as MantelIcon } from 'assets/icons/mantelIcon.svg'
 import { ReactComponent as User } from 'assets/icons/user-circle.svg'
 import { n6 } from 'helpers/formatters'
 
@@ -45,7 +45,7 @@ const CardDetails: React.FC<ICardDetails> = ({
           <p className="font-regular">{likes}</p> */}
         </div>
         <div className="flex g-5">
-          <CronosIcon width={14} height={14} className="cronos" />
+          <MantelIcon width={34} height={34} className="cronos" />
           <p className="font-regular">{n6.format(price)}</p>
         </div>
       </div>

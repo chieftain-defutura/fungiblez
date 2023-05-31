@@ -1,9 +1,11 @@
-export const NFT1Address = '0x272e83176ff39e0957fb07d350e2729505857238'
-export const NFT2Address = '0x428090ecb6e0c1b03de6a1803b51e8d5ea9d73a8'
+//sepolia
 
-export const CURRENCY_MANAGER =
-  '0x5814fB2ad131a6543975601e854D9C0c0e63B6A5'.toLowerCase()
-export const WCRO = '0x9913332b0796dd48c9fafb9d19b2c022b1a42420'.toLowerCase()
+// export const NFT1Address = '0x272e83176ff39e0957fb07d350e2729505857238'
+// export const NFT2Address = '0x428090ecb6e0c1b03de6a1803b51e8d5ea9d73a8'
+
+// export const CURRENCY_MANAGER =
+//   '0x5814fB2ad131a6543975601e854D9C0c0e63B6A5'.toLowerCase()
+// export const WCRO = '0x9913332b0796dd48c9fafb9d19b2c022b1a42420'.toLowerCase()
 export const ROYALTY_FEE_REGISTRY =
   '0x617826746c26Fea45d8eF654496512DA3238763d'.toLowerCase()
 export const ROYALTY_FEE_MANAGER =
@@ -22,3 +24,13 @@ export const TRANSFER_MANAGER_NFT =
   '0x40Cb3aE7493c173ec89c4984d2D5DCB1f622F6bB'.toLowerCase()
 export const STRATEGY =
   '0xFDf3998212001B84cbdD12426E77913bb486db57'.toLowerCase()
+
+//mantel
+
+export const NFT1Address =
+  '0x102a20606661e9717F9480AF51930759193bBdC1'.toLowerCase()
+export const NFT2Address =
+  '0x2F6a8E81E78e1A62B1f8B06a1D9868789F07ca56'.toLowerCase()
+export const CURRENCY_MANAGER =
+  '0x26ef97FdEcf61F9F1544c7faF5b2C2118e472806'.toLowerCase()
+export const WCRO = '0x9a2da354C751eb8d89bcc5796ACdA5c04B5ec824'.toLowerCase()
