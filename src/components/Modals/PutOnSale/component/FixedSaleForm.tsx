@@ -11,21 +11,6 @@ import { COLLECTION, MINTED_EXCHANGE, STRATEGY, WCRO } from 'utils/address'
 import axios from 'axios'
 import { baseURL } from 'api'
 
-// const tokensLists = [
-//   {
-//     tokenAddress: CRO,
-//     isApproved: false,
-//     name: 'CRO',
-//     balance: 0,
-//   },
-//   {
-//     tokenAddress: WCRO,
-//     isApproved: false,
-//     name: 'WCRO',
-//     balance: 0,
-//   },
-// ]
-
 interface IFixedSaleForm {
   modal: boolean
   id: string
@@ -148,7 +133,7 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
       // storing data in database
       const data = await axios.post(`${baseURL}/marketplace/create`, {
         userAddress: address,
-        status: 'pending',
+        status: 'finished',
         tokenId: id,
         collectionAddress: nftAddress,
         ask: {
@@ -173,59 +158,6 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
         },
       })
       console.log(data)
-
-      //token generating
-      // const contract = new ethers.Contract(
-      //   MINTED_EXCHANGE,
-      //   MintedABI,
-      //   signerData as any,
-      // )
-      // if (token === 'wrco') {
-      //   const tx = await contract.matchAskWithTakerBid([
-      //     {
-      //       isOrderAsk: true,
-      //       signer: address,
-      //       collection: COLLECTION,
-      //       price: ethers.utils.parseEther('1.99').toString(),
-      //       tokenId: id,
-      //       amount: 1,
-      //       strategy: STRATEGY,
-      //       currency: WCRO,
-      //       nonce: 0,
-      //       startTime: 1684824393,
-      //       endTime: 1687416368,
-      //       minPercentageToAsk: 8500,
-      //       params: '0x',
-      //       r: `0x${_r.toString('hex')}`,
-      //       s: `0x${_s.toString('hex')}`,
-      //       v: _v.toString(),
-      //     },
-      //   ])
-      //   await tx.wait()
-      // }
-      // if (token === 'cro') {
-      //   const tx = await contract.matchAskWithTakerBidUsingETHAndWETH([
-      //     {
-      //       isOrderAsk: true,
-      //       signer: address,
-      //       collection: COLLECTION,
-      //       price: ethers.utils.parseEther(values.amount).toString(),
-      //       tokenId: id,
-      //       amount: 1,
-      //       strategy: STRATEGY,
-      //       currency: WCRO,
-      //       nonce: 0,
-      //       startTime: 1684824393,
-      //       endTime: 1687416368,
-      //       minPercentageToAsk: 8500,
-      //       params: '0x',
-      //       r: `0x${_r.toString('hex')}`,
-      //       s: `0x${_s.toString('hex')}`,
-      //       v: _v.toString(),
-      //     },
-      //   ])
-      //   await tx.wait()
-      // }
 
       setTransaction({
         loading: true,
@@ -254,21 +186,6 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
                   <p>{errors.amount}</p>
                 ) : null}
               </div>
-
-              {/* <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-around',
-                  padding: '20px',
-                }}
-              >
-                <div className="" onClick={() => setToken('wcro')}>
-                  WCRO TOKEN
-                </div>
-                <div className="" onClick={() => setToken('cro')}>
-                  CRO TOKEN
-                </div>
-              </div> */}
 
               <Button variant="ternary" type="submit">
                 Confirm

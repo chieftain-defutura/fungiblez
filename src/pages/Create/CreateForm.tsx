@@ -53,10 +53,12 @@ const CreateForm: React.FC<{}> = () => {
             setImageCID(file.cid)
           }
 
+          console.log(imagefiles[0].cid)
+
           const obj = {
             name: values.name,
             description: values.description,
-            image: imageCID,
+            image: imagefiles[0].cid,
           }
 
           console.log(obj)

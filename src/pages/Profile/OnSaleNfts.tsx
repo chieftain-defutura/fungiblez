@@ -7,9 +7,11 @@ import { ethers } from 'ethers'
 import { NFT1Address, NFT2Address } from 'utils/address'
 import NFTAbi from '../../utils/abi/nft.json'
 import { baseURL } from 'api'
+import { CardLoader } from 'components'
 
 const OnSaleNfts = () => {
   const [data, setData] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
   const [marketplaceData, setMarketplaceData] = useState<any[]>([])
   const { data: signerData } = useSigner()
   const { address } = useAccount()
@@ -20,7 +22,7 @@ const OnSaleNfts = () => {
   const getData = useCallback(async () => {
     try {
       if (!address || !signerData) return
-
+      setLoading(true)
       const { data } = await axios.get(`${baseURL}/marketplace/`)
       console.log(data)
       setMarketplaceData(data)
@@ -70,6 +72,8 @@ const OnSaleNfts = () => {
       setData([...result1, ...result])
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false)
     }
   }, [address, signerData])
 
@@ -77,6 +81,14 @@ const OnSaleNfts = () => {
   useEffect(() => {
     getData()
   }, [getData])
+
+  if (loading) {
+    return <CardLoader />
+  }
+
+  if (data && !data.length) {
+    return <div className="loader">No Data</div>
+  }
 
   return (
     <div className="card_wrapper">

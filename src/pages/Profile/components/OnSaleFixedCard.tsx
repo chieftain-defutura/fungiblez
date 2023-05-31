@@ -41,7 +41,9 @@ const OnSaleFixedCard: React.FC<IData> = ({ tokenId }) => {
         MintedABI,
         signerData as any,
       )
-      const tx = await contract.CancelAllOrders(address, 0)
+
+      console.log(contract)
+      const tx = await contract.cancelAllOrdersForSender(1)
       await tx.wait()
       console.log('added')
 

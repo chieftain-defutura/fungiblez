@@ -3,7 +3,7 @@ export const NFT2Address = '0x428090ecb6e0c1b03de6a1803b51e8d5ea9d73a8'
 
 export const CURRENCY_MANAGER =
   '0x5814fB2ad131a6543975601e854D9C0c0e63B6A5'.toLowerCase()
-export const WCRO = '0x8B9Da5D25DA039c27D737b643264166234a4854E'.toLowerCase()
+export const WCRO = '0x9913332b0796dd48c9fafb9d19b2c022b1a42420'.toLowerCase()
 export const ROYALTY_FEE_REGISTRY =
   '0x617826746c26Fea45d8eF654496512DA3238763d'.toLowerCase()
 export const ROYALTY_FEE_MANAGER =

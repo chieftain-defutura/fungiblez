@@ -124,11 +124,26 @@ const FixedCard: React.FC<IData> = ({
         signerData as any,
       )
 
-      const erc20tx = await erc20Contract.increaseAllowance(
-        MINTED_EXCHANGE,
-        ethers.constants.MaxUint256,
+      // console.log(erc20Contract)
+
+      // const erc20tx = await erc20Contract.approve(
+      //   MINTED_EXCHANGE,
+      //   ethers.constants.MaxUint256,
+      // )
+      // await erc20tx.wait()
+
+      const allowance = Number(
+        (await erc20Contract.allowance(address, MINTED_EXCHANGE)).toString(),
       )
-      await erc20tx.wait()
+
+      console.log(allowance)
+      if (allowance <= 0) {
+        const tx = await erc20Contract.approve(
+          MINTED_EXCHANGE,
+          ethers.constants.MaxUint256,
+        )
+        await tx.wait()
+      }
 
       const contract = new ethers.Contract(
         MINTED_EXCHANGE,
@@ -265,8 +280,8 @@ const FixedCard: React.FC<IData> = ({
           {address?.toLowerCase() !== owner.toLowerCase() && (
             <div style={{ display: 'flex', gap: '5px' }}>
               {/* <Button onClick={handleSale}>Buy</Button> */}
-              <Button onClick={handleWCRO}>WCRO</Button>
-              <Button onClick={handleCRO}>CRO</Button>
+              <Button onClick={handleWCRO}>$bit</Button>
+              <Button onClick={handleCRO}>$wbit</Button>
             </div>
           )}
         </div>
