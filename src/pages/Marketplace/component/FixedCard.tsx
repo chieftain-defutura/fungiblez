@@ -257,7 +257,7 @@ const FixedCard: React.FC<IData> = ({
     <div className="nft_card">
       <div className="nft_card-container">
         <div className="nft_card-container_image">
-          <LazyImage src="" />
+          <LazyImage src={`https://ipfs.io/ipfs/${detailsData?.image}`} />
         </div>
         <div className="nft_card-container_content">
           <div>

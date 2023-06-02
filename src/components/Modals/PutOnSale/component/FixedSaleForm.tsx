@@ -25,7 +25,6 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
-
   const validationSchema = Yup.object({
     amount: Yup.number()
       .positive('Amount must be greater than zero')
@@ -45,7 +44,7 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
       const domain = {
         name: 'MintedExchange',
         version: '1',
-        chainId: '11155111',
+        chainId: '5001',
         verifyingContract: MINTED_EXCHANGE,
       }
 
@@ -66,8 +65,8 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
         strategy: STRATEGY,
         currency: WCRO,
         nonce: 0,
-        startTime: 1684824393,
-        endTime: 1687416368,
+        startTime: new Date(Date.now()).getTime(),
+        endTime: new Date(Date.now()).getTime(),
         minPercentageToAsk: 8500,
         params: '0x',
       }
@@ -146,8 +145,8 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
           strategy: STRATEGY,
           currency: WCRO,
           nonce: 0,
-          startTime: 1684824393,
-          endTime: 1687416368,
+          startTime: new Date(Date.now()).getTime(),
+          endTime: new Date(Date.now()).getTime(),
           minPercentageToAsk: 8500,
           params: '0x',
         },
