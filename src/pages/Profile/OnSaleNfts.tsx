@@ -16,9 +16,6 @@ const OnSaleNfts = () => {
   const { data: signerData } = useSigner()
   const { address } = useAccount()
 
-  console.log(data)
-  console.log(marketplaceData)
-
   const getData = useCallback(async () => {
     try {
       if (!address || !signerData) return
@@ -78,6 +75,8 @@ const OnSaleNfts = () => {
   }, [address, signerData])
 
   console.log(data)
+  console.log(marketplaceData)
+
   useEffect(() => {
     getData()
   }, [getData])
@@ -92,24 +91,25 @@ const OnSaleNfts = () => {
 
   return (
     <div className="card_wrapper">
-      {data.map((f, i) => (
-        <>
-          {marketplaceData.map(
-            (s, i) =>
-              s.userAddress === f.owner &&
-              f.nftAddress === s.collectionAddress &&
-              f.Id === s.tokenId && (
-                <OnSaleFixedCard
-                  key={i}
-                  dataAsk={s.ask}
-                  tokenId={s.tokenId}
-                  owner={f.owner}
-                  status={f.status}
-                />
-              ),
-          )}
-        </>
-      ))}
+      {data.map((f, i) =>
+        marketplaceData
+          .filter(
+            (p) =>
+              p.userAddress === address &&
+              p.collectionAddress === f.nftAddress &&
+              p.tokenId === f.Id,
+          )
+          .map((s, i) => (
+            <OnSaleFixedCard
+              key={i}
+              dataAsk={s.ask}
+              tokenId={s.tokenId}
+              owner={f.owner}
+              status={f.status}
+              details={f.details}
+            />
+          )),
+      )}
     </div>
   )
 }

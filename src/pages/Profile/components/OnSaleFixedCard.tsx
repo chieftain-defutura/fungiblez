@@ -1,10 +1,11 @@
 import { Button, LazyImage } from 'components'
 import { ethers } from 'ethers'
 import { useTransactionModal } from 'hooks'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import MintedABI from '../../../utils/abi/minted.json'
 import { useAccount, useSigner } from 'wagmi'
 import { MINTED_EXCHANGE } from 'utils/address'
+import axios from 'axios'
 
 interface IData {
   tokenId: any
@@ -25,11 +26,17 @@ interface IData {
     minPercentageToAsk: number
     params: string
   }
+  details: string
 }
-const OnSaleFixedCard: React.FC<IData> = ({ tokenId }) => {
+const OnSaleFixedCard: React.FC<IData> = ({ tokenId, details }) => {
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
+  const [detailsData, setDetailsData] = useState<{
+    name: string
+    description: string
+    image: string
+  }>()
 
   const handleRemove = async () => {
     if (!address || !signerData) return
@@ -61,15 +68,28 @@ const OnSaleFixedCard: React.FC<IData> = ({ tokenId }) => {
     }
   }
 
+  const getData = useCallback(async () => {
+    const { data } = await axios.get(`https://ipfs.io/ipfs/${details}`)
+    setDetailsData(data)
+    console.log(data)
+  }, [details])
+
+  useEffect(() => {
+    getData()
+  }, [getData])
+
   return (
     <div className="nft_card">
       <div className="nft_card-container">
         <div className="nft_card-container_image">
-          <LazyImage src="" />
+          <LazyImage src={`https://ipfs.io/ipfs/${detailsData?.image}`} />
         </div>
         <div className="nft_card-container_content">
           <div>
-            <h3 style={{ fontSize: '3.2rem', lineHeight: '3.2rem' }}>name</h3>
+            <h3 style={{ fontSize: '3.2rem', lineHeight: '3.2rem' }}>
+              {' '}
+              {detailsData ? detailsData.name : 'unnamed'}
+            </h3>
           </div>
           <div>
             {/* <p>

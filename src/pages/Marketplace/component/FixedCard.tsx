@@ -1,13 +1,15 @@
-import { Button, LazyImage } from 'components'
-import { ethers } from 'ethers'
-import { useTransactionModal } from 'hooks'
 import React, { useCallback, useEffect, useState } from 'react'
-// import { MARKETPLACE_CONTRACT_ADDRESS } from 'utils/address'
-import MintedABI from '../../../utils/abi/minted.json'
 import { useAccount, useSigner } from 'wagmi'
+import { ethers } from 'ethers'
+import axios from 'axios'
+
+import MintedABI from '../../../utils/abi/minted.json'
 import TokenAbi from '../../../utils/abi/token.json'
 import { MINTED_EXCHANGE, WCRO } from 'utils/address'
-import axios from 'axios'
+import { Backdrop, Button, LazyImage, ModalHeader } from 'components'
+import { useTransactionModal } from 'hooks'
+import { AnimatePresence, motion } from 'framer-motion'
+import { formatEther } from 'helpers/formatters'
 
 interface IData {
   tokenId: string
@@ -46,61 +48,12 @@ const FixedCard: React.FC<IData> = ({
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
+  const [open, setOpen] = useState(false)
   const [detailsData, setDetailsData] = useState<{
     name: string
     description: string
     image: string
   }>()
-
-  // console.log(dataAsk)
-  // console.log(dataOrderHash)
-
-  // const handleSale = async () => {
-  //   if (!address || !signerData) return
-
-  //   try {
-  //     setTransaction({ loading: true, status: 'pending' })
-  //     // const erc20Contract = new ethers.Contract(
-  //     //   tokenaddress,
-  //     //   TokenAbi,
-  //     //   signerData as any,
-  //     // )
-
-  //     // const allowance = Number(
-  //     //   (
-  //     //     await erc20Contract.allowance(address, MARKETPLACE_CONTRACT_ADDRESS)
-  //     //   ).toString(),
-  //     // )
-  //     // console.log(allowance)
-  //     // if (allowance <= 0) {
-  //     //   const tx = await erc20Contract.approve(
-  //     //     MARKETPLACE_CONTRACT_ADDRESS,
-  //     //     ethers.constants.MaxUint256,
-  //     //   )
-  //     //   await tx.wait()
-  //     // }
-
-  //     // const contract = new ethers.Contract(
-  //     //   MARKETPLACE_CONTRACT_ADDRESS,
-  //     //   MarketplaceABI,
-  //     //   signerData as any,
-  //     // )
-
-  //     // const tx = await contract.finishFixedSale(auctionId)
-  //     // await tx.wait()
-  //     console.log('saled')
-  //     setTransaction({ loading: true, status: 'success' })
-  //   } catch (error) {
-  //     const Error = Array(error).map((f: any) => f.reason)
-  //     const message = Error.toString().split(':')
-
-  //     setTransaction({
-  //       loading: true,
-  //       status: 'error',
-  //       message: `${message[2]}  `,
-  //     })
-  //   }
-  // }
 
   const getData = useCallback(async () => {
     const { data } = await axios.get(`https://ipfs.io/ipfs/${details}`)
@@ -113,6 +66,7 @@ const FixedCard: React.FC<IData> = ({
   }, [getData])
 
   const handleWCRO = async () => {
+    setOpen(false)
     if (!address || !signerData) return
 
     try {
@@ -123,14 +77,6 @@ const FixedCard: React.FC<IData> = ({
         TokenAbi,
         signerData as any,
       )
-
-      // console.log(erc20Contract)
-
-      // const erc20tx = await erc20Contract.approve(
-      //   MINTED_EXCHANGE,
-      //   ethers.constants.MaxUint256,
-      // )
-      // await erc20tx.wait()
 
       const allowance = Number(
         (await erc20Contract.allowance(address, MINTED_EXCHANGE)).toString(),
@@ -183,6 +129,7 @@ const FixedCard: React.FC<IData> = ({
       console.log('saled')
       setTransaction({ loading: true, status: 'success' })
     } catch (error) {
+      setOpen(false)
       console.log(error)
       const Error = Array(error).map((f: any) => f.reason)
       const message = Error.toString().split(':')
@@ -196,10 +143,30 @@ const FixedCard: React.FC<IData> = ({
   }
 
   const handleCRO = async () => {
+    setOpen(false)
     if (!address || !signerData) return
 
     try {
       setTransaction({ loading: true, status: 'pending' })
+
+      const erc20Contract = new ethers.Contract(
+        WCRO,
+        TokenAbi,
+        signerData as any,
+      )
+
+      const allowance = Number(
+        (await erc20Contract.allowance(address, MINTED_EXCHANGE)).toString(),
+      )
+
+      console.log(allowance)
+      if (allowance <= 0) {
+        const tx = await erc20Contract.approve(
+          MINTED_EXCHANGE,
+          ethers.constants.MaxUint256,
+        )
+        await tx.wait()
+      }
 
       const contract = new ethers.Contract(
         MINTED_EXCHANGE,
@@ -277,14 +244,51 @@ const FixedCard: React.FC<IData> = ({
           </div>
         </div>
         <div className="nft_card-container_controls">
-          {address?.toLowerCase() !== owner.toLowerCase() && (
-            <div style={{ display: 'flex', gap: '5px' }}>
-              {/* <Button onClick={handleSale}>Buy</Button> */}
-              <Button onClick={handleWCRO}>$bit</Button>
-              <Button onClick={handleCRO}>$wbit</Button>
-            </div>
+          {address?.toLowerCase() !== owner.toLowerCase() ? (
+            <Button onClick={() => setOpen(true)}>Buy</Button>
+          ) : (
+            <Button>Owner</Button>
           )}
         </div>
+
+        <Backdrop handleClose={() => setOpen(false)} isOpen={open}>
+          <AnimatePresence exitBeforeEnter>
+            {open && (
+              <motion.div
+                className={'modal wallet_modal'}
+                onClick={(e) => e.stopPropagation()}
+                animate="animate"
+                initial="initial"
+                exit="exit"
+              >
+                <div className="wallet_modal-content">
+                  <ModalHeader
+                    title="Put On Sale"
+                    handleClose={() => setOpen(false)}
+                  />
+                  {address?.toLowerCase() !== owner.toLowerCase() && (
+                    <>
+                      <div>
+                        <h3 style={{ fontSize: '18px', paddingBottom: '15px' }}>
+                          Price : {formatEther(dataAsk.price)}
+                        </h3>
+                      </div>
+                      <div style={{ display: 'flex', gap: '5px' }}>
+                        {/* <Button onClick={handleSale}>Buy</Button> */}
+                        <Button style={{ width: '100%' }} onClick={handleCRO}>
+                          $bit
+                        </Button>
+                        <Button style={{ width: '100%' }} onClick={handleWCRO}>
+                          $wbit
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Backdrop>
       </div>
     </div>
   )

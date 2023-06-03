@@ -1,15 +1,12 @@
 import React, { useEffect, useCallback, useState } from 'react'
-// import { IContractType, IMarketplaceStatus, ISaleType } from 'constants/types'
-// import { formatEther } from 'helpers/formatters'
-import FixedCard from './component/FixedCard'
-import { CardLoader } from 'components'
 import { useAccount, useSigner } from 'wagmi'
-
-import NFTAbi from '../../utils/abi/nft.json'
-// import marketplaceabi from 'utils/abi/marketplace.json'
 import { ethers } from 'ethers'
 import axios from 'axios'
+
 import { NFT1Address, NFT2Address } from 'utils/address'
+import NFTAbi from '../../utils/abi/nft.json'
+import FixedCard from './component/FixedCard'
+import { CardLoader } from 'components'
 import { baseURL } from 'api'
 
 interface IMarketplaceMainProps {
@@ -23,64 +20,6 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any[]>([])
   const [marketplaceData, setMarketplaceData] = useState<any[]>([])
-  // const getData = useCallback(async () => {
-  //   try {
-  //     if (!address || !signerData) return
-
-  //     setLoading(true)
-
-  //     const { data } = await axios.get(
-  //       'http://localhost:8001/api/v1/marketplace/',
-  //     )
-  //     console.log(data)
-  //     const marketplaceContract = new ethers.Contract(
-  //       MARKETPLACE_CONTRACT_ADDRESS,
-  //       marketplaceabi,
-  //       signerData as any,
-  //     )
-
-  //     const totalAuctionIds = Number(
-  //       (await marketplaceContract.totalAuction()).toString(),
-  //     )
-
-  //     const result = await Promise.all(
-  //       Array.from({ length: totalAuctionIds }).map(async (_, id) => {
-  //         const auctionInfo = await marketplaceContract.auctionInfo(id)
-
-  //         return {
-  //           auctionId: id.toString(),
-  //           contractAddress: marketplaceContract.address,
-  //           tokenId: auctionInfo.tokenId.toString(),
-  //           owner: auctionInfo.auctioner,
-  //           heighestBidder: auctionInfo.highestBidder,
-  //           heighestBid: formatEther(auctionInfo.highestBid.toString()),
-  //           saleType:
-  //             auctionInfo.saleType.toString() === '0'
-  //               ? ISaleType.AUCTION
-  //               : ISaleType.FIXED_SALE,
-  //           status:
-  //             auctionInfo.status.toString() === '0'
-  //               ? IMarketplaceStatus.LIVE
-  //               : IMarketplaceStatus.FINISHED,
-  //           start: Number(auctionInfo.start.toString()) * 1000,
-  //           end: Number(auctionInfo.end.toString()) * 1000,
-  //           prevBidAmounts: auctionInfo.prevBidAmounts,
-  //           prevBidders: auctionInfo.prevBidders,
-  //           tokenAddress: auctionInfo.tokenaddress,
-  //           contractType: IContractType.ERC721,
-  //           // ...tokenDetails,
-  //           erc721TokenAddress: auctionInfo.tokencontract,
-  //         }
-  //       }),
-  //     )
-
-  //     setData(result.filter((f) => f.status !== IMarketplaceStatus.FINISHED))
-  //   } catch (error) {
-  //     console.log(error)
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }, [address, signerData])
 
   console.log(data)
   console.log(marketplaceData)
@@ -157,15 +96,7 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
   }
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr 1fr',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '40px',
-      }}
-    >
+    <div className="card_wrapper">
       {data.map((f, i) => (
         <>
           {marketplaceData.map((s) => (
