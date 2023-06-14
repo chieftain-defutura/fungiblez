@@ -10,27 +10,14 @@ import { Backdrop, Button, LazyImage, ModalHeader } from 'components'
 import { useTransactionModal } from 'hooks'
 import { AnimatePresence, motion } from 'framer-motion'
 import { formatEther } from 'helpers/formatters'
+import { IMarketplace } from 'constants/types'
 
 interface IData {
   tokenId: string
   owner: string
   details: any
   status: string
-  dataAsk: {
-    isOrderAsk: boolean
-    signer: string
-    collection: string
-    price: string
-    tokenId: string
-    amount: number
-    strategy: string
-    currency: string
-    nonce: number
-    startTime: number
-    endTime: number
-    minPercentageToAsk: number
-    params: string
-  }
+  dataAsk: IMarketplace
   dataOrderHash: {
     r: string
     s: string
@@ -64,6 +51,7 @@ const FixedCard: React.FC<IData> = ({
   useEffect(() => {
     getData()
   }, [getData])
+  console.log(dataAsk)
 
   const handleWCRO = async () => {
     setOpen(false)
@@ -82,7 +70,6 @@ const FixedCard: React.FC<IData> = ({
         (await erc20Contract.allowance(address, MINTED_EXCHANGE)).toString(),
       )
 
-      console.log(allowance)
       if (allowance <= 0) {
         const tx = await erc20Contract.approve(
           MINTED_EXCHANGE,
@@ -97,37 +84,57 @@ const FixedCard: React.FC<IData> = ({
         signerData as any,
       )
 
-      const tx = await contract.matchAskWithTakerBid(
-        [
-          false,
-          address,
-          `${dataAsk.price}`,
-          dataAsk.tokenId,
-          dataAsk.minPercentageToAsk,
-          dataAsk.params,
-        ],
-        [
-          dataAsk.isOrderAsk,
-          dataAsk.signer,
-          dataAsk.collection,
-          `${dataAsk.price}`,
-          dataAsk.tokenId,
-          dataAsk.amount,
-          dataAsk.strategy,
-          dataAsk.currency,
-          dataAsk.nonce,
-          dataAsk.startTime,
-          dataAsk.endTime,
-          dataAsk.minPercentageToAsk,
-          dataAsk.params,
-          dataOrderHash.v,
-          dataOrderHash.r,
-          dataOrderHash.s,
-        ],
-      )
+      const takerBid: any = [
+        false,
+        address,
+        `${dataAsk.ask.price}`,
+        dataAsk.tokenId,
+        dataAsk.ask.minPercentageToAsk,
+        dataAsk.ask.params,
+      ]
+      const makerAsk: any = [
+        dataAsk.ask.isOrderAsk,
+        dataAsk.ask.signer,
+        dataAsk.ask.collection,
+        `${dataAsk.ask.price}`,
+        dataAsk.tokenId,
+        dataAsk.ask.amount,
+        dataAsk.ask.strategy,
+        dataAsk.ask.currency,
+        dataAsk.ask.nonce,
+        dataAsk.ask.startTime,
+        dataAsk.ask.endTime,
+        dataAsk.ask.minPercentageToAsk,
+        dataAsk.ask.params,
+        dataAsk.orderHash.v,
+        dataAsk.orderHash.r,
+        dataAsk.orderHash.s,
+      ]
+
+      // const gaslimit = await contract.estimateGas.matchAskWithTakerBid(
+      //   takerBid,
+      //   makerAsk,
+      // )
+      const tx = await contract.matchAskWithTakerBid(takerBid, makerAsk)
       await tx.wait()
       console.log('saled')
       setTransaction({ loading: true, status: 'success' })
+
+      // if (allowance <= 0) {
+      //   const txa = await erc20Contract
+      //     .approve(MINTED_EXCHANGE, ethers.constants.MaxUint256)
+      //     .send({ from: address })
+      //   await txa.wait()
+      //   const tx = await contract.matchAskWithTakerBid(takerBid, makerAsk)
+      //   await tx.wait()
+      //   console.log('saled')
+      //   setTransaction({ loading: true, status: 'success' })
+      // } else {
+      //   const tx = await contract.matchAskWithTakerBid(takerBid, makerAsk)
+      //   await tx.wait()
+      //   console.log('saled')
+      //   setTransaction({ loading: true, status: 'success' })
+      // }
     } catch (error) {
       setOpen(false)
       console.log(error)
@@ -149,25 +156,6 @@ const FixedCard: React.FC<IData> = ({
     try {
       setTransaction({ loading: true, status: 'pending' })
 
-      const erc20Contract = new ethers.Contract(
-        WCRO,
-        TokenAbi,
-        signerData as any,
-      )
-
-      const allowance = Number(
-        (await erc20Contract.allowance(address, MINTED_EXCHANGE)).toString(),
-      )
-
-      console.log(allowance)
-      if (allowance <= 0) {
-        const tx = await erc20Contract.approve(
-          MINTED_EXCHANGE,
-          ethers.constants.MaxUint256,
-        )
-        await tx.wait()
-      }
-
       const contract = new ethers.Contract(
         MINTED_EXCHANGE,
         MintedABI,
@@ -178,31 +166,31 @@ const FixedCard: React.FC<IData> = ({
         [
           false,
           address,
-          `${dataAsk.price}`,
+          `${dataAsk.ask.price}`,
           dataAsk.tokenId,
-          dataAsk.minPercentageToAsk,
-          dataAsk.params,
+          dataAsk.ask.minPercentageToAsk,
+          dataAsk.ask.params,
         ],
         [
-          dataAsk.isOrderAsk,
-          dataAsk.signer,
-          dataAsk.collection,
-          `${dataAsk.price}`,
+          dataAsk.ask.isOrderAsk,
+          dataAsk.ask.signer,
+          dataAsk.ask.collection,
+          `${dataAsk.ask.price}`,
           dataAsk.tokenId,
-          dataAsk.amount,
-          dataAsk.strategy,
-          dataAsk.currency,
-          dataAsk.nonce,
-          dataAsk.startTime,
-          dataAsk.endTime,
-          dataAsk.minPercentageToAsk,
-          dataAsk.params,
-          dataOrderHash.v,
-          dataOrderHash.r,
-          dataOrderHash.s,
+          dataAsk.ask.amount,
+          dataAsk.ask.strategy,
+          dataAsk.ask.currency,
+          dataAsk.ask.nonce,
+          dataAsk.ask.startTime,
+          dataAsk.ask.endTime,
+          dataAsk.ask.minPercentageToAsk,
+          dataAsk.ask.params,
+          dataAsk.orderHash.v,
+          dataAsk.orderHash.r,
+          dataAsk.orderHash.s,
         ],
 
-        { value: ethers.utils.parseEther(`${dataAsk.price}`).toString() },
+        // { value: ethers.utils.parseEther(`${dataAsk.price}`).toString() },
       )
       await tx.wait()
       console.log('saled')
@@ -219,6 +207,7 @@ const FixedCard: React.FC<IData> = ({
       })
     }
   }
+  //@typescript-eslint/no-unused-vars
 
   return (
     <div className="nft_card">
@@ -270,7 +259,7 @@ const FixedCard: React.FC<IData> = ({
                     <>
                       <div>
                         <h3 style={{ fontSize: '18px', paddingBottom: '15px' }}>
-                          Price : {formatEther(dataAsk.price)}
+                          Price : {formatEther(dataAsk.ask.price)}
                         </h3>
                       </div>
                       <div style={{ display: 'flex', gap: '5px' }}>

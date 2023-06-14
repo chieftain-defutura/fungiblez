@@ -10,6 +10,11 @@ export const getEllipsisTxt = (str: string, n = 6) => {
   }
   return ''
 }
+export const n4 = new Intl.NumberFormat('en-us', {
+  style: 'decimal',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 18,
+})
 
 export const n6 = new Intl.NumberFormat('en-us', {
   style: 'decimal',

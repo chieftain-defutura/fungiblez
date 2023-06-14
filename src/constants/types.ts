@@ -74,3 +74,31 @@ export interface IImageFileProps {
   file: File
   url: string
 }
+
+export interface IMarketplace {
+  userAddress: string
+  status: string
+  tokenId: string
+  collectionAddress: string
+  ask: {
+    isOrderAsk: boolean
+    signer: string
+    collection: string
+    price: number
+    tokenId: number
+    amount: number
+    strategy: string
+    currency: string
+    nonce: number
+    startTime: number
+    endTime: number
+    minPercentageToAsk: number
+    params: string
+  }
+  orderHash: {
+    r: string
+    s: string
+    v: string
+  }
+}
+;[]

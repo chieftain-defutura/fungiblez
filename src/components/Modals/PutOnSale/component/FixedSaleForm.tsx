@@ -7,9 +7,17 @@ import * as Yup from 'yup'
 
 import { useTransactionModal } from 'hooks'
 
-import { COLLECTION, MINTED_EXCHANGE, STRATEGY, WCRO } from 'utils/address'
+import {
+  MINTED_EXCHANGE,
+  NFT1Address,
+  STRATEGY,
+  TRANSFER_MANAGER_ERC721,
+  WCRO,
+} from 'utils/address'
+import NftAbi from '../../../../utils/abi/nft.json'
 import axios from 'axios'
 import { baseURL } from 'api'
+import { useUserStore } from 'constants/storeuser'
 
 interface IFixedSaleForm {
   modal: boolean
@@ -22,6 +30,7 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
   id,
   handleClose,
 }) => {
+  const { data: nonceData, fetch } = useUserStore()
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
@@ -32,13 +41,23 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
   })
 
   const handlePutOnSale = async (values: any) => {
-    if (!address || !signerData) return
+    handleClose(false)
+    if (!address || !signerData || !nonceData) return
 
     try {
       setTransaction({
         loading: true,
         status: 'pending',
       })
+
+      const contract = new ethers.Contract(
+        NFT1Address,
+        NftAbi,
+        signerData as any,
+      )
+
+      const tx = await contract.setApprovalForAll(TRANSFER_MANAGER_ERC721, true)
+      await tx.wait()
 
       // rsv generating
       const domain = {
@@ -57,16 +76,16 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
 
       const permit = {
         isOrderAsk: true,
-        signer: address,
-        collection: COLLECTION,
+        signer: nonceData.user,
+        collection: nftAddress,
         price: ethers.utils.parseEther(`${values.amount}`).toString(),
         tokenId: id,
         amount: 1,
         strategy: STRATEGY,
         currency: WCRO,
-        nonce: 0,
-        startTime: new Date(Date.now()).getTime(),
-        endTime: new Date(Date.now()).getTime(),
+        nonce: nonceData.nonce,
+        startTime: Math.round(Date.now() / 1000),
+        endTime: Math.round((Date.now() + 86400000) / 1000),
         minPercentageToAsk: 8500,
         params: '0x',
       }
@@ -129,24 +148,25 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
       console.log(s)
       console.log(v)
 
+      console.log(nonceData)
       // storing data in database
       const data = await axios.post(`${baseURL}/marketplace/create`, {
-        userAddress: address,
+        userAddress: nonceData.user,
         status: 'finished',
         tokenId: id,
         collectionAddress: nftAddress,
         ask: {
           isOrderAsk: true,
-          signer: address,
-          collection: COLLECTION,
+          signer: nonceData.user,
+          collection: nftAddress,
           price: ethers.utils.parseEther(`${values.amount}`).toString(),
           tokenId: id,
           amount: 1,
           strategy: STRATEGY,
           currency: WCRO,
-          nonce: 0,
-          startTime: new Date(Date.now()).getTime(),
-          endTime: new Date(Date.now()).getTime(),
+          nonce: nonceData.nonce,
+          startTime: Math.round(Date.now() / 1000),
+          endTime: Math.round((Date.now() + 86400000) / 1000),
           minPercentageToAsk: 8500,
           params: '0x',
         },
@@ -157,18 +177,21 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
         },
       })
       console.log(data)
-
+      fetch(address)
       setTransaction({
         loading: true,
         status: 'success',
       })
+      handleClose(false)
     } catch (error) {
       console.log('------Error On Put on sale--------')
       console.log(error)
-      handleClose(true)
+      handleClose(false)
       setTransaction({ loading: true, status: 'error' })
     }
   }
+
+  // @typescript-eslint/no-unused-vars
   return (
     <div>
       <Formik

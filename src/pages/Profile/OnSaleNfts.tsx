@@ -34,10 +34,10 @@ const OnSaleNfts = () => {
 
       const result1 = await Promise.all(
         Array.from({ length: totalIdsNft1 }).map(async (_, id) => {
-          const address = await nftContract1.ownerOf(id)
-          const details = await nftContract1.tokenURI(id)
+          const address = await nftContract1.ownerOf(id + 1)
+          const details = await nftContract1.tokenURI(id + 1)
           return {
-            Id: id.toString(),
+            Id: (id + 1).toString(),
             owner: address,
             nftAddress: NFT1Address,
             details: details,
@@ -54,12 +54,12 @@ const OnSaleNfts = () => {
       const totalIds = Number((await nft2contract.totalSupply()).toString())
       const result = await Promise.all(
         Array.from({ length: totalIds }).map(async (_, id) => {
-          const address = await nft2contract.ownerOf(id)
-          const details = await nft2contract.tokenURI(id)
+          const address = await nft2contract.ownerOf(id + 1)
+          const details = await nft2contract.tokenURI(id + 1)
 
           console.log(details)
           return {
-            Id: id.toString(),
+            Id: (id + 1).toString(),
             owner: address,
             nftAddress: NFT2Address,
             details: details,
@@ -92,23 +92,19 @@ const OnSaleNfts = () => {
   return (
     <div className="card_wrapper">
       {data.map((f, i) =>
-        marketplaceData
-          .filter(
-            (p) =>
-              p.userAddress === address &&
-              p.collectionAddress === f.nftAddress &&
-              p.tokenId === f.Id,
-          )
-          .map((s, i) => (
-            <OnSaleFixedCard
-              key={i}
-              dataAsk={s.ask}
-              tokenId={s.tokenId}
-              owner={f.owner}
-              status={f.status}
-              details={f.details}
-            />
-          )),
+        marketplaceData.map(
+          (s, i) =>
+            s.tokenId === f.Id && (
+              <OnSaleFixedCard
+                key={i}
+                dataAsk={s.ask}
+                tokenId={s.tokenId}
+                owner={f.owner}
+                status={f.status}
+                details={f.details}
+              />
+            ),
+        ),
       )}
     </div>
   )

@@ -32,6 +32,8 @@ const MyNfts: React.FC<IMyNfts> = () => {
     }[]
   >([])
 
+  console.log(data)
+
   const handleGetData = useCallback(async () => {
     try {
       if (!address || !signerData) return
@@ -43,28 +45,14 @@ const MyNfts: React.FC<IMyNfts> = () => {
         signerData as any,
       )
 
-      // let headers = new Headers()
-      // headers.set(
-      //   'Authorization',
-      //   'Basic ' +
-      //     new Buffer('cqt_rQMhXv34w9T88BkMrc8RkC7hbrqv:').toString('base64'),
-      // )
-
-      // fetch(
-      //   'https://api.covalenthq.com/v1/5001/address/0xe05f949AB280414F4e3279fF3BE1e39774e4B4f3/balances_v2/?nft=true',
-      //   { method: 'GET', headers: headers },
-      // )
-      //   .then((resp) => resp.json())
-      //   .then((data) => console.log(data))
-      //   .catch((error) => console.log(error))
-
-      const totalIdsNft1 = Number((await nftContract1.totalSupply()).toString())
-      console.log(totalIdsNft1)
+      const totalId = Number((await nftContract1.totalSupply()).toString())
+      console.log(totalId)
 
       const result1 = await Promise.all(
-        Array.from({ length: totalIdsNft1 }).map(async (_, id) => {
+        Array.from({ length: totalId }).map(async (s, id) => {
           const address = await nftContract1.ownerOf(id)
           const details = await nftContract1.tokenURI(id)
+          console.log(id)
           return {
             Id: id.toString(),
             owner: address,
@@ -75,39 +63,41 @@ const MyNfts: React.FC<IMyNfts> = () => {
       )
       console.log(result1)
 
-      const nft2contract = new ethers.Contract(
-        NFT2Address,
-        NFTAbi,
-        signerData as any,
-      )
+      // const nft2contract = new ethers.Contract(
+      //   NFT2Address,
+      //   NFTAbi,
+      //   signerData as any,
+      // )
 
-      const totalIds = Number((await nft2contract.totalSupply()).toString())
-      console.log(totalIds)
-      const result = await Promise.all(
-        Array.from({ length: totalIds }).map(async (_, id) => {
-          const address = await nft2contract.ownerOf(id)
-          const details = await nft2contract.tokenURI(id)
+      // const Result2 = await nft2contract.tokenHolding(address)
+      // console.log(Result2)
+      // const totalIds = Number((await nft2contract.totalSupply()).toString())
+      // console.log(totalIds)
+      // const result = await Promise.all(
+      //   Array.from({ length: totalIds }).map(async (_, id) => {
+      //     const address = await nft2contract.connect(signerData).ownerOf(id)
+      //     const details = await nft2contract.tokenURI(id)
 
-          console.log(details)
-          return {
-            Id: id.toString(),
-            owner: address,
-            nftAddress: NFT2Address,
-            details: details,
-          }
-        }),
-      )
+      //     console.log(details)
+      //     return {
+      //       Id: id.toString(),
+      //       owner: address,
+      //       nftAddress: NFT2Address,
+      //       details: details,
+      //     }
+      //   }),
+      // )
 
-      console.log(result)
+      // console.log(result)
 
-      console.log([...result1, ...result])
+      // console.log([...result1, ...result])
       setData([
         ...result1.filter(
           (f) => f.owner.toLowerCase() === address.toLowerCase(),
         ),
-        ...result.filter(
-          (f) => f.owner.toLowerCase() === address.toLowerCase(),
-        ),
+        // ...result.filter(
+        //   (f) => f.owner.toLowerCase() === address.toLowerCase(),
+        // ),
       ])
     } catch (error) {
       console.log('------Error On Profile--------')

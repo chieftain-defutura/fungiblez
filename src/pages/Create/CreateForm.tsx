@@ -4,8 +4,7 @@ import { ICreateForm, IImageFileProps } from 'constants/types'
 import nftAbi from '../../utils/abi/nft.json'
 import Form from './components/Form'
 import { useTransactionModal } from 'hooks'
-import { Button } from 'components'
-import { NFT1Address, NFT2Address } from 'utils/address'
+import { NFT1Address } from 'utils/address'
 import { useAccount, useSigner } from 'wagmi'
 import { ethers } from 'ethers'
 import { Web3Storage } from 'web3.storage'
@@ -24,14 +23,12 @@ const initialState: ICreateForm = {
 
 const CreateForm: React.FC<{}> = () => {
   const [image, setImage] = useState<IImageFileProps | null>(null)
-  const [imageCID, setImageCID] = useState('')
-  const [objectCID, setObjectCID] = useState('')
+  // const [imageCID, setImageCID] = useState('')
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
 
-  console.log('image:', imageCID)
-  console.log('object:', objectCID)
+  // console.log('image:', imageCID)
 
   const handleSubmit = async (values: ICreateForm) => {
     if (!address || !signerData) return
@@ -49,9 +46,9 @@ const CreateForm: React.FC<{}> = () => {
           const res = await storage.get(cid)
           if (!res) return
           const imagefiles = await res.files()
-          for (const file of imagefiles) {
-            setImageCID(file.cid)
-          }
+          // for (const file of imagefiles) {
+          //   setImageCID(file.cid)
+          // }
 
           console.log(imagefiles[0].cid)
 
@@ -70,9 +67,24 @@ const CreateForm: React.FC<{}> = () => {
           const objectres = await storage.get(objectCid)
           if (!objectres) return
           const files = await objectres.files()
-          for (const file of files) {
-            setObjectCID(file.cid)
-          }
+          // for (const file of files) {
+          //   setObjectCID(file.cid)
+          // }
+          const mintContract = new ethers.Contract(
+            NFT1Address,
+            nftAbi,
+            signerData as any,
+          )
+
+          const estimateGas = await mintContract.estimateGas.awardItem(
+            address,
+            files[0].cid,
+          )
+
+          const tx = await mintContract.awardItem(address, files[0].cid, {
+            gasLimit: estimateGas,
+          })
+          await tx.wait()
         } catch (error) {
           console.log('Error sending File to IPFS:')
           console.log(error)
@@ -86,25 +98,34 @@ const CreateForm: React.FC<{}> = () => {
     }
   }
 
-  const handleMint = async (nftAddress: string) => {
-    if (!signerData || !address) return
+  // @typescript-eslint/no-unused-vars
 
-    try {
-      setTransaction({ loading: true, status: 'pending' })
+  // const handleMint = async (nftAddress: string) => {
+  //   if (!signerData || !address) return
 
-      const mintContract = new ethers.Contract(
-        nftAddress,
-        nftAbi,
-        signerData as any,
-      )
-      const tx = await mintContract.mint(address, objectCID)
-      await tx.wait()
-      setTransaction({ loading: true, status: 'success' })
-    } catch (error: any) {
-      console.log(error.reason)
-      setTransaction({ loading: true, status: 'error', message: error })
-    }
-  }
+  //   try {
+  //     setTransaction({ loading: true, status: 'pending' })
+  //     const mintContract = new ethers.Contract(
+  //       nftAddress,
+  //       nftAbi,
+  //       signerData as any,
+  //     )
+
+  //     const estimateGas = await mintContract.estimateGas.mint(
+  //       address,
+  //       objectCID,
+  //     )
+
+  //     const tx = await mintContract.mint(address, objectCID, {
+  //       gasLimit: estimateGas,
+  //     })
+  //     await tx.wait()
+  //     setTransaction({ loading: true, status: 'success' })
+  //   } catch (error: any) {
+  //     console.log(error)
+  //     setTransaction({ loading: true, status: 'error', message: error.reason })
+  //   }
+  // }
 
   const renderImageContent = (
     <>
@@ -135,8 +156,8 @@ const CreateForm: React.FC<{}> = () => {
 
       <Form initialState={initialState} handleSubmit={handleSubmit} />
       <div className="formcard_container">
-        <Button onClick={() => handleMint(NFT1Address)}>mint nft 1</Button>
-        <Button onClick={() => handleMint(NFT2Address)}>mint nft 2</Button>
+        {/* <Button onClick={() => handleMint(NFT1Address)}>mint nft 1</Button>
+        <Button onClick={() => handleMint(NFT2Address)}>mint nft 2</Button> */}
       </div>
     </div>
   )
