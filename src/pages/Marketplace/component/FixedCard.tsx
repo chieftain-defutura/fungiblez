@@ -11,6 +11,7 @@ import { useTransactionModal } from 'hooks'
 import { AnimatePresence, motion } from 'framer-motion'
 import { formatEther } from 'helpers/formatters'
 import { IMarketplace } from 'constants/types'
+import { Link } from 'react-router-dom'
 
 interface IData {
   tokenId: string
@@ -210,76 +211,83 @@ const FixedCard: React.FC<IData> = ({
   //@typescript-eslint/no-unused-vars
 
   return (
-    <div className="nft_card">
-      <div className="nft_card-container">
-        <div className="nft_card-container_image">
-          <LazyImage src={`https://ipfs.io/ipfs/${detailsData?.image}`} />
-        </div>
-        <div className="nft_card-container_content">
-          <div>
-            <h3 style={{ fontSize: '3.2rem', lineHeight: '3.2rem' }}>
-              {detailsData?.name}
-            </h3>
+    <Link to={`/nftdetails/${tokenId}`}>
+      <div className="nft_card">
+        <div className="nft_card-container">
+          <div className="nft_card-container_image">
+            <LazyImage src={`https://ipfs.io/ipfs/${detailsData?.image}`} />
           </div>
-          <div>
-            {/* <p>
+          <div className="nft_card-container_content">
+            <div>
+              <h3 style={{ fontSize: '3.2rem', lineHeight: '3.2rem' }}>
+                {detailsData?.name}
+              </h3>
+            </div>
+            <div>
+              {/* <p>
               Token address: {tokenaddress?.slice(0, 6)}...
               {tokenaddress?.slice(tokenaddress?.length - 6)}
             </p> */}
-            <p>
-              Token Id #<b>{tokenId}</b>
-            </p>
-            {/* <p>price:{heighestBid}</p> */}
+              <p>
+                Token Id #<b>{tokenId}</b>
+              </p>
+              {/* <p>price:{heighestBid}</p> */}
+            </div>
           </div>
-        </div>
-        <div className="nft_card-container_controls">
-          {address?.toLowerCase() !== owner.toLowerCase() ? (
-            <Button onClick={() => setOpen(true)}>Buy</Button>
-          ) : (
-            <Button>Owner</Button>
-          )}
-        </div>
-
-        <Backdrop handleClose={() => setOpen(false)} isOpen={open}>
-          <AnimatePresence exitBeforeEnter>
-            {open && (
-              <motion.div
-                className={'modal wallet_modal'}
-                onClick={(e) => e.stopPropagation()}
-                animate="animate"
-                initial="initial"
-                exit="exit"
-              >
-                <div className="wallet_modal-content">
-                  <ModalHeader
-                    title="Put On Sale"
-                    handleClose={() => setOpen(false)}
-                  />
-                  {address?.toLowerCase() !== owner.toLowerCase() && (
-                    <>
-                      <div>
-                        <h3 style={{ fontSize: '18px', paddingBottom: '15px' }}>
-                          Price : {formatEther(dataAsk.ask.price)}
-                        </h3>
-                      </div>
-                      <div style={{ display: 'flex', gap: '5px' }}>
-                        {/* <Button onClick={handleSale}>Buy</Button> */}
-                        <Button style={{ width: '100%' }} onClick={handleCRO}>
-                          $bit
-                        </Button>
-                        <Button style={{ width: '100%' }} onClick={handleWCRO}>
-                          $wbit
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </motion.div>
+          <div className="nft_card-container_controls">
+            {address?.toLowerCase() !== owner.toLowerCase() ? (
+              <Button onClick={() => setOpen(true)}>Buy</Button>
+            ) : (
+              <Button>Owner</Button>
             )}
-          </AnimatePresence>
-        </Backdrop>
+          </div>
+
+          <Backdrop handleClose={() => setOpen(false)} isOpen={open}>
+            <AnimatePresence exitBeforeEnter>
+              {open && (
+                <motion.div
+                  className={'modal wallet_modal'}
+                  onClick={(e) => e.stopPropagation()}
+                  animate="animate"
+                  initial="initial"
+                  exit="exit"
+                >
+                  <div className="wallet_modal-content">
+                    <ModalHeader
+                      title="Put On Sale"
+                      handleClose={() => setOpen(false)}
+                    />
+                    {address?.toLowerCase() !== owner.toLowerCase() && (
+                      <>
+                        <div>
+                          <h3
+                            style={{ fontSize: '18px', paddingBottom: '15px' }}
+                          >
+                            Price : {formatEther(dataAsk.ask.price)}
+                          </h3>
+                        </div>
+                        <div style={{ display: 'flex', gap: '5px' }}>
+                          {/* <Button onClick={handleSale}>Buy</Button> */}
+                          <Button style={{ width: '100%' }} onClick={handleCRO}>
+                            $bit
+                          </Button>
+                          <Button
+                            style={{ width: '100%' }}
+                            onClick={handleWCRO}
+                          >
+                            $wbit
+                          </Button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Backdrop>
+        </div>
       </div>
-    </div>
+    </Link>
   )
 }
 

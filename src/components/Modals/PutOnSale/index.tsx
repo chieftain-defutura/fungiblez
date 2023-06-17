@@ -18,8 +18,6 @@ const PutOnSale: React.FC<IPutOnSaleModal> = ({
   id,
   nftAddress,
 }) => {
-  // const [putOnSaleOpen, setPutOnSaleOpen] = useState('')
-
   return (
     <Backdrop handleClose={() => handleClose(false)} isOpen={modal}>
       <AnimatePresence exitBeforeEnter>
@@ -36,46 +34,15 @@ const PutOnSale: React.FC<IPutOnSaleModal> = ({
                 title="Put On Sale"
                 handleClose={() => handleClose(false)}
               />
-              {/* {!putOnSaleOpen && (
-                <>
-                  <div>
-                    <Button
-                      variant="primary-outline"
-                      onClick={() => setPutOnSaleOpen('fixedSale')}
-                    >
-                      FixedSale
-                    </Button>
-                  </div>
-                  <div style={{ margin: '32px 0' }}>
-                    <Button
-                      variant="primary-outline"
-                      onClick={() => setPutOnSaleOpen('auction')}
-                    >
-                      Auction
-                    </Button>
-                  </div>
-                </>
-              )} */}
+
               <div>
-                {/* {putOnSaleOpen === 'fixedSale' && ( */}
                 <FixedSaleForm
                   nftAddress={nftAddress}
                   id={id}
                   modal={modal}
                   handleClose={handleClose}
                 />
-                {/* )} */}
               </div>
-
-              {/* <div>
-                {putOnSaleOpen === 'auction' && (
-                  <AuctionForm
-                    setPutOnSaleOpen={setPutOnSaleOpen}
-                    id={id}
-                    nftaddress={nftAddress}
-                  />
-                )}
-              </div> */}
             </div>
           </motion.div>
         )}

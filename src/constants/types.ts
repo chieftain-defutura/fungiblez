@@ -95,6 +95,23 @@ export interface IMarketplace {
     minPercentageToAsk: number
     params: string
   }
+  offers: [
+    {
+      isOrderAsk: boolean
+      signer: string
+      collection: string
+      price: number
+      tokenId: number
+      amount: number
+      strategy: string
+      currency: string
+      nonce: number
+      startTime: number
+      endTime: number
+      minPercentageToAsk: number
+      params: string
+    },
+  ]
   orderHash: {
     r: string
     s: string

@@ -5,7 +5,7 @@ import { useDarkMode } from 'usehooks-ts'
 
 import { Footer, Header } from './components'
 import { Home, Create, Profile, PageNotFound, Marketplace } from './pages'
-import Details from 'pages/NftDetailsPage/Details'
+import NftDetailsPage from 'pages/NftDetails'
 
 const App: React.FC = () => {
   const { isDarkMode } = useDarkMode()
@@ -33,7 +33,8 @@ const App: React.FC = () => {
             <Route path="/profile/*" element={<Profile />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="*" element={<PageNotFound />} />
-            <Route path="/details" element={<Details />} />
+            {/* <Route path="/details" element={<Details />} /> */}
+            <Route path="/nftdetails/:id" element={<NftDetailsPage />} />
           </Fragment>
         </Routes>
         <Footer />

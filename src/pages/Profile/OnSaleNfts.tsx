@@ -4,7 +4,7 @@ import { useAccount, useSigner } from 'wagmi'
 import OnSaleFixedCard from './components/OnSaleFixedCard'
 import axios from 'axios'
 import { ethers } from 'ethers'
-import { NFT1Address, NFT2Address } from 'utils/address'
+import { NFT1Address } from 'utils/address'
 import NFTAbi from '../../utils/abi/nft.json'
 import { baseURL } from 'api'
 import { CardLoader } from 'components'
@@ -34,10 +34,10 @@ const OnSaleNfts = () => {
 
       const result1 = await Promise.all(
         Array.from({ length: totalIdsNft1 }).map(async (_, id) => {
-          const address = await nftContract1.ownerOf(id + 1)
-          const details = await nftContract1.tokenURI(id + 1)
+          const address = await nftContract1.ownerOf(id)
+          const details = await nftContract1.tokenURI(id)
           return {
-            Id: (id + 1).toString(),
+            Id: id.toString(),
             owner: address,
             nftAddress: NFT1Address,
             details: details,
@@ -45,28 +45,28 @@ const OnSaleNfts = () => {
         }),
       )
 
-      const nft2contract = new ethers.Contract(
-        NFT2Address,
-        NFTAbi,
-        signerData as any,
-      )
+      // const nft2contract = new ethers.Contract(
+      //   NFT2Address,
+      //   NFTAbi,
+      //   signerData as any,
+      // )
 
-      const totalIds = Number((await nft2contract.totalSupply()).toString())
-      const result = await Promise.all(
-        Array.from({ length: totalIds }).map(async (_, id) => {
-          const address = await nft2contract.ownerOf(id + 1)
-          const details = await nft2contract.tokenURI(id + 1)
+      // const totalIds = Number((await nft2contract.totalSupply()).toString())
+      // const result = await Promise.all(
+      //   Array.from({ length: totalIds }).map(async (_, id) => {
+      //     const address = await nft2contract.ownerOf(id)
+      //     const details = await nft2contract.tokenURI(id)
 
-          console.log(details)
-          return {
-            Id: (id + 1).toString(),
-            owner: address,
-            nftAddress: NFT2Address,
-            details: details,
-          }
-        }),
-      )
-      setData([...result1, ...result])
+      //     console.log(details)
+      //     return {
+      //       Id: id.toString(),
+      //       owner: address,
+      //       nftAddress: NFT2Address,
+      //       details: details,
+      //     }
+      //   }),
+      // )
+      setData([...result1])
     } catch (error) {
       console.log(error)
     } finally {
