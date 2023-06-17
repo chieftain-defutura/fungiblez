@@ -9,11 +9,13 @@ import { useAccount, useSigner } from 'wagmi'
 import NFTAbi from '../../utils/abi/nft.json'
 import NftDetails from './NftDetails'
 
-const NftDetailsPage: React.FC = ({}) => {
+const NftDetailsPage: React.FC = () => {
   const { id } = useParams()
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const [loading, setLoading] = useState(false)
+  console.log(loading)
+
   const [detailsData, setDetailsData] = useState<{
     name: string
     description: string
@@ -67,7 +69,7 @@ const NftDetailsPage: React.FC = ({}) => {
     } finally {
       setLoading(false)
     }
-  }, [address, signerData])
+  }, [address, signerData, id])
 
   useEffect(() => {
     getData()

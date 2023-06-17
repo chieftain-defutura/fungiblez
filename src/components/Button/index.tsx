@@ -6,6 +6,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'error' | 'primary-outline' | 'ternary'
   children: ReactNode
   type?: 'button' | 'submit' | 'reset'
+  leftIcon?: ReactNode
 }
 
 const getClassName = (variant: string) => {
@@ -28,6 +29,7 @@ const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   className = undefined,
   type = 'button',
+  leftIcon = null,
   ...rest
 }) => {
   const classNames = className
@@ -36,6 +38,7 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <button className={classNames} type={type} {...rest}>
+      {leftIcon && <span className="btn_left-icon">{leftIcon}</span>}
       {children}
     </button>
   )
