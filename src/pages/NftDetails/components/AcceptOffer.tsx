@@ -1,14 +1,11 @@
 import { baseURL } from 'api'
 import axios from 'axios'
-import { Button } from 'components'
 import { IMarketplace } from 'constants/types'
 import { ethers } from 'ethers'
 import MintedABI from '../../../utils/abi/minted.json'
 import { formatEther } from 'helpers/formatters'
 import { useTransactionModal } from 'hooks'
 import React, { useCallback, useEffect, useState } from 'react'
-// import { useParams } from 'react-router-dom'
-// import { MINTED_EXCHANGE } from 'utils/address'
 import { ReactComponent as MantelIcon } from '../../../assets/icons/mantelIcon.svg'
 import HandImg from '../../../assets/icons/hand.svg'
 
@@ -30,7 +27,7 @@ const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
       `${baseURL}/marketplace/${id}`,
     )
     setData(data)
-  }, [])
+  }, [id])
 
   useEffect(() => {
     getData()
