@@ -56,8 +56,18 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
         signerData as any,
       )
 
-      const tx = await contract.setApprovalForAll(TRANSFER_MANAGER_ERC721, true)
-      await tx.wait()
+      const ApprovedForAll = await contract.isApprovedForAll(
+        NFT1Address,
+        TRANSFER_MANAGER_ERC721,
+      )
+
+      if (ApprovedForAll) {
+        const tx = await contract.setApprovalForAll(
+          TRANSFER_MANAGER_ERC721,
+          true,
+        )
+        await tx.wait()
+      }
 
       // rsv generating
       const domain = {
@@ -202,7 +212,7 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
         {({ errors, touched }) => (
           <Form>
             <div className="fixed-sale-form">
-              <div>
+              <div style={{ paddingBottom: '20px' }}>
                 <Field type="number" placeholder="Amount" name="amount" />
                 {touched.amount && errors.amount ? (
                   <p>{errors.amount}</p>

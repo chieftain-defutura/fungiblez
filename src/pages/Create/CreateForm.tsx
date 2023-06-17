@@ -9,26 +9,20 @@ import { useAccount, useSigner } from 'wagmi'
 import { ethers } from 'ethers'
 import { Web3Storage } from 'web3.storage'
 import ImageDropper from 'components/ImageDropper'
+import { useNavigate } from 'react-router-dom'
 
 const initialState: ICreateForm = {
   name: '',
   image: '',
   description: '',
-  // external_link: '',
-  // royaltyFee: '',
-  // totalSupply: '',
-  // isMultiple: false,
-  // attributes: [{ trait_type: '', value: '' }],
 }
 
 const CreateForm: React.FC<{}> = () => {
   const [image, setImage] = useState<IImageFileProps | null>(null)
-  // const [imageCID, setImageCID] = useState('')
   const { address } = useAccount()
+  const navigate = useNavigate()
   const { data: signerData } = useSigner()
   const { setTransaction } = useTransactionModal()
-
-  // console.log('image:', imageCID)
 
   const handleSubmit = async (values: ICreateForm) => {
     if (!address || !signerData) return
@@ -46,9 +40,6 @@ const CreateForm: React.FC<{}> = () => {
           const res = await storage.get(cid)
           if (!res) return
           const imagefiles = await res.files()
-          // for (const file of imagefiles) {
-          //   setImageCID(file.cid)
-          // }
 
           console.log(imagefiles[0].cid)
 
@@ -67,9 +58,7 @@ const CreateForm: React.FC<{}> = () => {
           const objectres = await storage.get(objectCid)
           if (!objectres) return
           const files = await objectres.files()
-          // for (const file of files) {
-          //   setObjectCID(file.cid)
-          // }
+
           const mintContract = new ethers.Contract(
             NFT1Address,
             nftAbi,
@@ -85,6 +74,7 @@ const CreateForm: React.FC<{}> = () => {
             gasLimit: estimateGas,
           })
           await tx.wait()
+          navigate('/profile')
         } catch (error) {
           console.log('Error sending File to IPFS:')
           console.log(error)
@@ -155,10 +145,7 @@ const CreateForm: React.FC<{}> = () => {
       />
 
       <Form initialState={initialState} handleSubmit={handleSubmit} />
-      <div className="formcard_container">
-        {/* <Button onClick={() => handleMint(NFT1Address)}>mint nft 1</Button>
-        <Button onClick={() => handleMint(NFT2Address)}>mint nft 2</Button> */}
-      </div>
+      <div className="formcard_container"></div>
     </div>
   )
 }

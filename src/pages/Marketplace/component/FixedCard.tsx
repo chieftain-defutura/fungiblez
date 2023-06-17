@@ -112,30 +112,10 @@ const FixedCard: React.FC<IData> = ({
         dataAsk.orderHash.s,
       ]
 
-      // const gaslimit = await contract.estimateGas.matchAskWithTakerBid(
-      //   takerBid,
-      //   makerAsk,
-      // )
       const tx = await contract.matchAskWithTakerBid(takerBid, makerAsk)
       await tx.wait()
       console.log('saled')
       setTransaction({ loading: true, status: 'success' })
-
-      // if (allowance <= 0) {
-      //   const txa = await erc20Contract
-      //     .approve(MINTED_EXCHANGE, ethers.constants.MaxUint256)
-      //     .send({ from: address })
-      //   await txa.wait()
-      //   const tx = await contract.matchAskWithTakerBid(takerBid, makerAsk)
-      //   await tx.wait()
-      //   console.log('saled')
-      //   setTransaction({ loading: true, status: 'success' })
-      // } else {
-      //   const tx = await contract.matchAskWithTakerBid(takerBid, makerAsk)
-      //   await tx.wait()
-      //   console.log('saled')
-      //   setTransaction({ loading: true, status: 'success' })
-      // }
     } catch (error) {
       setOpen(false)
       console.log(error)
@@ -234,7 +214,10 @@ const FixedCard: React.FC<IData> = ({
               {/* <p>price:{heighestBid}</p> */}
             </div>
           </div>
-          <div className="nft_card-container_controls">
+          <div
+            className="nft_card-container_controls"
+            onClick={(e) => e.preventDefault()}
+          >
             {address?.toLowerCase() !== owner.toLowerCase() ? (
               <Button onClick={() => setOpen(true)}>Buy</Button>
             ) : (

@@ -11,6 +11,7 @@ import MakeOffer from './components/MakeOffer'
 import BuyNFT from './components/BuyNFT'
 import AcceptOffer from './components/AcceptOffer'
 import { formatEther } from 'helpers/formatters'
+import { MINTED_EXCHANGE } from 'utils/address'
 
 interface INftDetails {
   detailsData:
@@ -45,30 +46,24 @@ const NftDetails: React.FC<INftDetails> = ({ detailsData, dataAsk, owner }) => {
               <p>Token ID</p>
               <p>Token Standard</p>
               <p>Blockchain</p>
-              <p>Collection Royalty</p>
             </div>
             <div className="price-content">
-              <h5>0x0659...7c26</h5>
-              <p>4822</p>
-              <p>CRC-721</p>
+              <h5>
+                {MINTED_EXCHANGE?.slice(0, 6)}...
+                {MINTED_EXCHANGE?.slice(MINTED_EXCHANGE?.length - 6)}
+              </h5>
+              <p>{dataAsk.tokenId}</p>
+              <p>Mantel</p>
               <div className="mentel-content">
                 <MantelIcon width={34} height={34} className="cronos" />{' '}
                 {formatEther(dataAsk.ask.price)}.00
               </div>
-              <p>5%</p>
             </div>
           </div>
         </div>
         <div className="about-collection-wrapper">
           <h2>About Collection</h2>
-          <p>
-            VVS miner mole is a collection of 10,000 utility-enabled PFP. On top
-            of exclusive VVS perks and special IRL event invites. The artwork is
-            also a precursor to our game - VVSgotchi. It gives holders an
-            opportunity to participate in the creation of new characters in the
-            game. The collection consists of over 100+ unique hand-drawn traits
-            from scratch spanning various rarities with no two alike.
-          </p>
+          <p>{detailsData?.description}</p>
         </div>
       </div>
       <div className="right-container">
@@ -91,7 +86,7 @@ const NftDetails: React.FC<INftDetails> = ({ detailsData, dataAsk, owner }) => {
                   <p>Ends: </p>
                 </div>
                 <div>
-                  <p>in 24 days</p>
+                  <p>in {new Date(dataAsk.ask.endTime).getDay()} days</p>
                 </div>
               </div>
             </div>
@@ -111,38 +106,11 @@ const NftDetails: React.FC<INftDetails> = ({ detailsData, dataAsk, owner }) => {
                 </Button>
               </div>
             ) : (
-              <>
+              <div className="buttons">
                 <Button>Owner</Button>
-              </>
+              </div>
             )}
           </div>
-
-          {/* <div className="nft_card-container_controls">
-            <h1>{detailsData?.name}</h1>
-            <h4>
-              Owned By : {dataAsk.userAddress?.slice(0, 6)}...
-              {dataAsk.userAddress?.slice(dataAsk.userAddress?.length - 6)}{' '}
-            </h4>
-            <div className="price">
-              <MantelIcon width={34} height={34} className="cronos" />{' '}
-              {formatEther(dataAsk.ask.price)}.00
-            </div>
-            {address?.toLowerCase() !== owner.toLowerCase() ? (
-              <div className="buttons">
-                <Button onClick={() => setOpen(true)}>Buy</Button>
-                <Button
-                  variant="primary-outline"
-                  onClick={() => setOpenOffer(true)}
-                >
-                  Make Offer
-                </Button>
-              </div>
-            ) : (
-              <>
-                <Button>Owner</Button>
-              </>
-            )}
-          </div> */}
 
           <BuyNFT
             dataAsk={dataAsk}
