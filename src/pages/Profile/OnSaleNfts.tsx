@@ -16,7 +16,7 @@ const OnSaleNfts = () => {
   const [data, setData] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   // const [marketplaceData, setMarketplaceData] = useState<any[]>([])
-  const { data: signerData, refetch } = useSigner()
+  const { data: signerData } = useSigner()
   const { address } = useAccount()
 
   const getData = useCallback(async () => {
