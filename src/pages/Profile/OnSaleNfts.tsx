@@ -4,47 +4,74 @@ import { useAccount, useSigner } from 'wagmi'
 import OnSaleFixedCard from './components/OnSaleFixedCard'
 import axios from 'axios'
 import { ethers } from 'ethers'
-import { NFT1Address } from 'utils/address'
+import { MINTED_EXCHANGE, NFT1Address } from 'utils/address'
 import NFTAbi from '../../utils/abi/nft.json'
+import mintAbi from '../../utils/abi/minted.json'
+
 import { baseURL } from 'api'
 import { CardLoader } from 'components'
+import { IMarketplace } from 'constants/types'
 
 const OnSaleNfts = () => {
   const [data, setData] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
-  const [marketplaceData, setMarketplaceData] = useState<any[]>([])
-  const { data: signerData } = useSigner()
+  // const [marketplaceData, setMarketplaceData] = useState<any[]>([])
+  const { data: signerData, refetch } = useSigner()
   const { address } = useAccount()
 
   const getData = useCallback(async () => {
     try {
       if (!address || !signerData) return
       setLoading(true)
-      const { data } = await axios.get(`${baseURL}/marketplace/`)
+
+      const { data } = await axios.get<IMarketplace[]>(
+        `${baseURL}/marketplace/`,
+      )
+
       console.log(data)
-      setMarketplaceData(data)
+      const mintexchangeContract = new ethers.Contract(
+        MINTED_EXCHANGE,
+        mintAbi,
+        signerData as any,
+      )
 
       const nftContract1 = new ethers.Contract(
         NFT1Address,
         NFTAbi,
         signerData as any,
       )
+      const result = await Promise.all(
+        data.map(async (f) => {
+          const nonce =
+            await mintexchangeContract.isUserOrderNonceExecutedOrCancelled(
+              f.ask.signer,
+              f.ask.nonce,
+            )
 
-      const totalIdsNft1 = Number((await nftContract1.totalSupply()).toString())
-
-      const result1 = await Promise.all(
-        Array.from({ length: totalIdsNft1 }).map(async (_, id) => {
-          const address = await nftContract1.ownerOf(id)
-          const details = await nftContract1.tokenURI(id)
-          return {
-            Id: id.toString(),
-            owner: address,
-            nftAddress: NFT1Address,
-            details: details,
-          }
+          return { ...f, isfinished: nonce }
         }),
       )
 
+      const filteredData = await Promise.all(
+        result
+          .filter(
+            (f) =>
+              f.isfinished === false && f.userAddress === address.toLowerCase(),
+          )
+          .map(async (s) => {
+            const address = await nftContract1.ownerOf(s.tokenId)
+            const details = await nftContract1.tokenURI(s.tokenId)
+
+            return {
+              dataAsk: s,
+              details: details,
+              owner: address,
+              Id: s.tokenId,
+            }
+          }),
+      )
+      setData([...filteredData])
+      console.log(filteredData)
       // const nft2contract = new ethers.Contract(
       //   NFT2Address,
       //   NFTAbi,
@@ -66,7 +93,7 @@ const OnSaleNfts = () => {
       //     }
       //   }),
       // )
-      setData([...result1])
+      // setData([...result1])
     } catch (error) {
       console.log(error)
     } finally {
@@ -75,7 +102,6 @@ const OnSaleNfts = () => {
   }, [address, signerData])
 
   console.log(data)
-  console.log(marketplaceData)
 
   useEffect(() => {
     getData()
@@ -91,20 +117,19 @@ const OnSaleNfts = () => {
 
   return (
     <div className="card_wrapper">
-      {data.map((f, i) =>
-        marketplaceData.map(
-          (s, i) =>
-            s.tokenId === f.Id && (
-              <OnSaleFixedCard
-                key={i}
-                dataAsk={s.ask}
-                tokenId={s.tokenId}
-                owner={f.owner}
-                status={f.status}
-                details={f.details}
-              />
-            ),
+      {data.map(
+        (f, i) => (
+          <OnSaleFixedCard
+            key={i}
+            owner={f.owner}
+            status={f.status}
+            details={f.details}
+            nonce={f.dataAsk.ask.nonce}
+            tokenId={f.Id}
+            dataAsk={f.dataAsk}
+          />
         ),
+        // )),
       )}
     </div>
   )

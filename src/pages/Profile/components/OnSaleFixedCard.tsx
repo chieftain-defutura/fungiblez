@@ -27,10 +27,11 @@ interface IData {
     params: string
   }
   details: string
+  nonce: number
 }
-const OnSaleFixedCard: React.FC<IData> = ({ tokenId, details }) => {
+const OnSaleFixedCard: React.FC<IData> = ({ tokenId, details, nonce }) => {
   const { address } = useAccount()
-  const { data: signerData } = useSigner()
+  const { data: signerData, refetch } = useSigner()
   const { setTransaction } = useTransactionModal()
   const [detailsData, setDetailsData] = useState<{
     name: string
@@ -49,11 +50,10 @@ const OnSaleFixedCard: React.FC<IData> = ({ tokenId, details }) => {
         signerData as any,
       )
 
-      console.log(contract)
-      const tx = await contract.cancelAllOrdersForSender(1)
+      const tx = await contract.cancelMultipleMakerOrders([nonce])
       await tx.wait()
       console.log('added')
-
+      refetch()
       setTransaction({ loading: true, status: 'success' })
     } catch (error) {
       console.log(error)
@@ -71,7 +71,6 @@ const OnSaleFixedCard: React.FC<IData> = ({ tokenId, details }) => {
   const getData = useCallback(async () => {
     const { data } = await axios.get(`https://ipfs.io/ipfs/${details}`)
     setDetailsData(data)
-    console.log(data)
   }, [details])
 
   useEffect(() => {
@@ -87,15 +86,10 @@ const OnSaleFixedCard: React.FC<IData> = ({ tokenId, details }) => {
         <div className="nft_card-container_content">
           <div>
             <h3 style={{ fontSize: '3.2rem', lineHeight: '3.2rem' }}>
-              {' '}
               {detailsData ? detailsData.name : 'unnamed'}
             </h3>
           </div>
           <div>
-            {/* <p>
-              Token address: {tokenaddress?.slice(0, 6)}...
-              {tokenaddress?.slice(tokenaddress?.length - 6)}
-            </p> */}
             <p>
               Token Id #<b>{tokenId}</b>
             </p>
