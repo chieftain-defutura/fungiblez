@@ -5,11 +5,13 @@ import { useUserStore } from 'constants/storeuser'
 import { ethers } from 'ethers'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTransactionModal } from 'hooks'
-import React, { useState } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { MINTED_EXCHANGE, STRATEGY, WCRO } from 'utils/address'
 import { useAccount, useSigner } from 'wagmi'
 import TokenAbi from '../../../utils/abi/token.json'
+import { Field, Form, Formik } from 'formik'
+import * as Yup from 'yup'
 
 interface IMakeOffer {
   setOpenOffer: React.Dispatch<React.SetStateAction<boolean>>
@@ -27,14 +29,21 @@ const MakeOffer: React.FC<IMakeOffer> = ({
   const { id } = useParams()
   const { data: nonceData, fetch } = useUserStore()
   const { address } = useAccount()
-  const { data: signerData } = useSigner()
+  const { data: signerData, refetch } = useSigner()
   const { setTransaction } = useTransactionModal()
-  const [price, setPrice] = useState('')
-  const [expire, setExpire] = useState('')
 
-  const handleOffer = async () => {
+  const validationSchema = Yup.object({
+    price: Yup.number()
+      .positive('Price must be greater than zero')
+      .required('Price is required'),
+    expiredate: Yup.number()
+      .positive('Expire Date must be greater than zero')
+      .required('Expire Date is required'),
+  })
+
+  const handleOffer = async (values: any) => {
     setOpenOffer(false)
-    if (!address || !signerData || !price || !expire) return
+    if (!address || !signerData) return
     try {
       setTransaction({ loading: true, status: 'pending' })
 
@@ -72,7 +81,7 @@ const MakeOffer: React.FC<IMakeOffer> = ({
         isOrderAsk: false,
         signer: nonceData.user,
         collection: collectionAddress,
-        price: ethers.utils.parseEther(`${price}`).toString(),
+        price: ethers.utils.parseEther(`${values.price}`).toString(),
         tokenId: id,
         amount: 1,
         strategy: STRATEGY,
@@ -151,7 +160,7 @@ const MakeOffer: React.FC<IMakeOffer> = ({
           isOrderAsk: false,
           signer: address,
           collection: collectionAddress,
-          price: ethers.utils.parseEther(`${price}`).toString(),
+          price: ethers.utils.parseEther(`${values.price}`).toString(),
           tokenId: id,
           amount: 1,
           strategy: STRATEGY,
@@ -159,7 +168,7 @@ const MakeOffer: React.FC<IMakeOffer> = ({
           nonce: nonceData.nonce,
           startTime: Math.round(Date.now() / 1000),
           endTime: Math.round(
-            Date.now() + Number(expire) * 24 * 60 * 60 * 1000,
+            Date.now() + Number(values.expiredate) * 24 * 60 * 60 * 1000,
           ),
           minPercentageToAsk: 8500,
           params: '0x',
@@ -167,7 +176,7 @@ const MakeOffer: React.FC<IMakeOffer> = ({
       })
       console.log(data)
       fetch(address)
-
+      refetch()
       setTransaction({ loading: true, status: 'success' })
     } catch (error) {
       setOpenOffer(false)
@@ -201,31 +210,46 @@ const MakeOffer: React.FC<IMakeOffer> = ({
                 />
                 {address?.toLowerCase() !== owner.toLowerCase() && (
                   <>
-                    <div>
-                      <h3 style={{ fontSize: '18px', paddingBottom: '15px' }}>
-                        Price :{' '}
-                        <input
-                          type="number"
-                          name=""
-                          id=""
-                          onChange={(e) => setPrice(e.target.value)}
-                        />
-                      </h3>
-                    </div>
-                    <div>
-                      <h3 style={{ fontSize: '18px', paddingBottom: '15px' }}>
-                        Expiration :
-                        <input
-                          type="number"
-                          name=""
-                          id=""
-                          onChange={(e) => setExpire(e.target.value)}
-                        />
-                      </h3>
-                    </div>
-                    <div className="make-offer">
-                      <Button onClick={handleOffer}>Make Offer</Button>
-                    </div>
+                    <Formik
+                      initialValues={{ price: '', expiredate: '' }}
+                      onSubmit={handleOffer}
+                      validationSchema={validationSchema}
+                    >
+                      {({ errors, touched }) => (
+                        <Form>
+                          <div className="fixed-sale-form">
+                            <div style={{ paddingBottom: '20px' }}>
+                              <Field
+                                type="number"
+                                placeholder="Price"
+                                name="price"
+                              />
+                              {touched.price && errors.price ? (
+                                <p>{errors.price}</p>
+                              ) : null}
+                            </div>
+                            <div style={{ paddingBottom: '20px' }}>
+                              <Field
+                                type="number"
+                                placeholder="Expire Date"
+                                name="expiredate"
+                              />
+                              {touched.expiredate && errors.expiredate ? (
+                                <p>{errors.expiredate}</p>
+                              ) : null}
+                            </div>
+
+                            <Button
+                              variant="ternary"
+                              type="submit"
+                              style={{ margin: 'auto' }}
+                            >
+                              Make Offer
+                            </Button>
+                          </div>
+                        </Form>
+                      )}
+                    </Formik>
                   </>
                 )}
               </div>

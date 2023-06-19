@@ -1,20 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import Card from './components/Card'
 import NFTAbi from '../../utils/abi/nft.json'
-import mintAbi from '../../utils/abi/minted.json'
 import { useAccount, useSigner } from 'wagmi'
 import { ethers } from 'ethers'
 import {
-  MINTED_EXCHANGE,
   // MARKETPLACE_CONTRACT_ADDRESS,
   NFT1Address,
   NFT2Address,
   TRANSFER_MANAGER_ERC721,
 } from 'utils/address'
 import { CardLoader } from 'components'
-import axios from 'axios'
-import { baseURL } from 'api'
-import { IMarketplace } from 'constants/types'
 
 interface IMyNfts {}
 
@@ -28,7 +23,14 @@ const MyNfts: React.FC<IMyNfts> = () => {
       isApproved: boolean
     }[]
   >([])
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<
+    {
+      Id: string
+      owner: any
+      nftAddress: string
+      details: string
+    }[]
+  >([])
 
   console.log(data)
 
@@ -37,55 +39,29 @@ const MyNfts: React.FC<IMyNfts> = () => {
       if (!address || !signerData) return
 
       setLoading(true)
-
-      const { data } = await axios.get<IMarketplace[]>(
-        `${baseURL}/marketplace/`,
-      )
-
-      console.log(data)
-      const mintexchangeContract = new ethers.Contract(
-        MINTED_EXCHANGE,
-        mintAbi,
-        signerData as any,
-      )
-
       const nftContract1 = new ethers.Contract(
         NFT1Address,
         NFTAbi,
         signerData as any,
       )
-      const result = await Promise.all(
-        data.map(async (f) => {
-          const nonce =
-            await mintexchangeContract.isUserOrderNonceExecutedOrCancelled(
-              f.ask.signer,
-              f.ask.nonce,
-            )
 
-          return { ...f, isfinished: nonce }
+      const totalId = Number((await nftContract1.totalSupply()).toString())
+      console.log(totalId)
+
+      const result1 = await Promise.all(
+        Array.from({ length: totalId }).map(async (s, id) => {
+          const address = await nftContract1.ownerOf(id)
+          const details = await nftContract1.tokenURI(id)
+          console.log(id)
+          return {
+            Id: id.toString(),
+            owner: address,
+            nftAddress: NFT1Address,
+            details: details,
+          }
         }),
       )
-
-      const filteredData = await Promise.all(
-        result
-          .filter(
-            (f) =>
-              f.isfinished === true && f.userAddress === address.toLowerCase(),
-          )
-          .map(async (s) => {
-            const address = await nftContract1.ownerOf(s.tokenId)
-            const details = await nftContract1.tokenURI(s.tokenId)
-
-            return {
-              dataAsk: s,
-              details: details,
-              owner: address,
-              Id: s.tokenId,
-            }
-          }),
-      )
-      setData([...filteredData])
-      console.log(filteredData)
+      console.log(result1)
 
       // const nft2contract = new ethers.Contract(
       //   NFT2Address,
@@ -115,14 +91,14 @@ const MyNfts: React.FC<IMyNfts> = () => {
       // console.log(result)
 
       // console.log([...result1, ...result])
-      // setData([
-      //   ...result1.filter(
-      //     (f) => f.owner.toLowerCase() === address.toLowerCase(),
-      //   ),
-      //   // ...result.filter(
-      //   //   (f) => f.owner.toLowerCase() === address.toLowerCase(),
-      //   // ),
-      // ])
+      setData([
+        ...result1.filter(
+          (f) => f.owner.toLowerCase() === address.toLowerCase(),
+        ),
+        // ...result.filter(
+        //   (f) => f.owner.toLowerCase() === address.toLowerCase(),
+        // ),
+      ])
     } catch (error) {
       console.log('------Error On Profile--------')
       console.log(error)

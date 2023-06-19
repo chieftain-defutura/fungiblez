@@ -3,6 +3,8 @@ import axios from 'axios'
 import { IMarketplace } from 'constants/types'
 import { ethers } from 'ethers'
 import MintedABI from '../../../utils/abi/minted.json'
+import NftAbi from '../../../utils/abi/nft.json'
+
 import { formatEther } from 'helpers/formatters'
 import { useTransactionModal } from 'hooks'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -11,7 +13,11 @@ import HandImg from '../../../assets/icons/hand.svg'
 
 import { useAccount, useSigner } from 'wagmi'
 import { useParams } from 'react-router-dom'
-import { MINTED_EXCHANGE } from 'utils/address'
+import {
+  MINTED_EXCHANGE,
+  NFT1Address,
+  TRANSFER_MANAGER_ERC721,
+} from 'utils/address'
 
 interface IAcceptOffer {
   owner: string
@@ -33,6 +39,7 @@ const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
     getData()
   }, [getData])
 
+  console.log(data)
   return (
     <>
       {data?.offers.map((f) => (
@@ -44,7 +51,7 @@ const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
               <h6>Price</h6>
               <div className="content">
                 <MantelIcon width={34} height={34} className="cronos" />
-                <p>{formatEther(f.price)}</p>
+                <p>{formatEther(f.price)}.00</p>
               </div>
               {owner === address && (
                 <div className="hand-img">
@@ -103,7 +110,7 @@ interface IOffer {
 
 const Offer: React.FC<IOffer> = ({ owner, data, dataAsk }) => {
   const { address } = useAccount()
-  const { data: signerData } = useSigner()
+  const { data: signerData, refetch } = useSigner()
   const { setTransaction } = useTransactionModal()
 
   const handleAcceptOfferWithWcro = async () => {
@@ -112,6 +119,24 @@ const Offer: React.FC<IOffer> = ({ owner, data, dataAsk }) => {
     try {
       setTransaction({ loading: true, status: 'pending' })
 
+      const NFTcontract = new ethers.Contract(
+        NFT1Address,
+        NftAbi,
+        signerData as any,
+      )
+
+      const ApprovedForAll = await NFTcontract.isApprovedForAll(
+        NFT1Address,
+        TRANSFER_MANAGER_ERC721,
+      )
+
+      if (!ApprovedForAll) {
+        const tx = await NFTcontract.setApprovalForAll(
+          TRANSFER_MANAGER_ERC721,
+          true,
+        )
+        await tx.wait()
+      }
       const contract = new ethers.Contract(
         MINTED_EXCHANGE,
         MintedABI,
@@ -149,6 +174,7 @@ const Offer: React.FC<IOffer> = ({ owner, data, dataAsk }) => {
       const tx = await contract.matchBidWithTakerAsk(takerAsk, makerBid)
       await tx.wait()
       console.log('saled')
+      refetch()
       setTransaction({ loading: true, status: 'success' })
 
       // }

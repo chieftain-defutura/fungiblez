@@ -61,7 +61,7 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
         TRANSFER_MANAGER_ERC721,
       )
 
-      if (ApprovedForAll) {
+      if (!ApprovedForAll) {
         const tx = await contract.setApprovalForAll(
           TRANSFER_MANAGER_ERC721,
           true,

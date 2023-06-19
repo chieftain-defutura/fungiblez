@@ -137,6 +137,24 @@ const FixedCard: React.FC<IData> = ({
     try {
       setTransaction({ loading: true, status: 'pending' })
 
+      const erc20Contract = new ethers.Contract(
+        WCRO,
+        TokenAbi,
+        signerData as any,
+      )
+
+      const allowance = Number(
+        (await erc20Contract.allowance(address, MINTED_EXCHANGE)).toString(),
+      )
+
+      if (allowance <= 0) {
+        const tx = await erc20Contract.approve(
+          MINTED_EXCHANGE,
+          ethers.constants.MaxUint256,
+        )
+        await tx.wait()
+      }
+
       const contract = new ethers.Contract(
         MINTED_EXCHANGE,
         MintedABI,

@@ -19,7 +19,7 @@ interface IBuyNFT {
 
 const BuyNFT: React.FC<IBuyNFT> = ({ owner, setOpen, open, dataAsk }) => {
   const { address } = useAccount()
-  const { data: signerData } = useSigner()
+  const { data: signerData, refetch } = useSigner()
   const { setTransaction } = useTransactionModal()
 
   const handleWCRO = async () => {
@@ -83,6 +83,7 @@ const BuyNFT: React.FC<IBuyNFT> = ({ owner, setOpen, open, dataAsk }) => {
       const tx = await contract.matchAskWithTakerBid(takerBid, makerAsk)
       await tx.wait()
       console.log('saled')
+      refetch()
       setTransaction({ loading: true, status: 'success' })
     } catch (error) {
       setOpen(false)
@@ -103,6 +104,24 @@ const BuyNFT: React.FC<IBuyNFT> = ({ owner, setOpen, open, dataAsk }) => {
 
     try {
       setTransaction({ loading: true, status: 'pending' })
+
+      const erc20Contract = new ethers.Contract(
+        WCRO,
+        TokenAbi,
+        signerData as any,
+      )
+
+      const allowance = Number(
+        (await erc20Contract.allowance(address, MINTED_EXCHANGE)).toString(),
+      )
+
+      if (allowance <= 0) {
+        const tx = await erc20Contract.approve(
+          MINTED_EXCHANGE,
+          ethers.constants.MaxUint256,
+        )
+        await tx.wait()
+      }
 
       const contract = new ethers.Contract(
         MINTED_EXCHANGE,
@@ -140,6 +159,7 @@ const BuyNFT: React.FC<IBuyNFT> = ({ owner, setOpen, open, dataAsk }) => {
       )
       await tx.wait()
       console.log('saled')
+      refetch()
       setTransaction({ loading: true, status: 'success' })
     } catch (error) {
       console.log(error)
