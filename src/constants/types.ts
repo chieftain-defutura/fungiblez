@@ -118,4 +118,5 @@ export interface IMarketplace {
     v: string
   }
 }
-;[]
+
+//@typescript-eslint/no-unused-expressions

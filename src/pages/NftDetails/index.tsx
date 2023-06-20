@@ -54,7 +54,7 @@ const NftDetailsPage: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [address, signerData, id])
+  }, [address, signerData, id, collectionAddress])
 
   useEffect(() => {
     getData()
