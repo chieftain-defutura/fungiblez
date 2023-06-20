@@ -22,16 +22,22 @@ interface INftDetails {
       }
     | undefined
 
-  dataAsk: IMarketplace
+  dataAsk: IMarketplace | undefined
   owner: string
   id: string
 }
 
-const NftDetails: React.FC<INftDetails> = ({ detailsData, dataAsk, owner }) => {
+const NftDetails: React.FC<INftDetails> = ({
+  detailsData,
+  dataAsk,
+  owner,
+  id,
+}) => {
   const { address } = useAccount()
   const [open, setOpen] = useState(false)
   const [openOffer, setOpenOffer] = useState(false)
 
+  console.log(dataAsk)
   return (
     <div className="nftdetailpage-container">
       <div className="left-container">
@@ -45,18 +51,21 @@ const NftDetails: React.FC<INftDetails> = ({ detailsData, dataAsk, owner }) => {
               <p>Contract Address</p>
               <p>Token ID</p>
               <p>Token Standard</p>
-              <p>Blockchain</p>
+              <p>Price</p>
             </div>
             <div className="price-content">
               <h5>
                 {MINTED_EXCHANGE?.slice(0, 6)}...
                 {MINTED_EXCHANGE?.slice(MINTED_EXCHANGE?.length - 6)}
               </h5>
-              <p>{dataAsk.tokenId}</p>
+              <p>{id}</p>
               <p>Mantel</p>
               <div className="mentel-content">
                 <MantelIcon width={34} height={34} className="cronos" />{' '}
-                {formatEther(dataAsk.ask.price)}.00
+                {dataAsk && dataAsk['ask']
+                  ? formatEther(dataAsk?.ask.price)
+                  : 0}
+                .00
               </div>
             </div>
           </div>
@@ -70,15 +79,18 @@ const NftDetails: React.FC<INftDetails> = ({ detailsData, dataAsk, owner }) => {
         <div className="header-wrapper">
           <h2>{detailsData?.name}</h2>
           <h3>
-            Owned By : {dataAsk.userAddress?.slice(0, 6)}...
-            {dataAsk.userAddress?.slice(dataAsk.userAddress?.length - 6)}{' '}
+            Owned By : {owner?.slice(0, 6)}...
+            {owner?.slice(owner?.length - 6)}{' '}
           </h3>
 
           <div className="nft-card-content">
             <div className="nft-price-wrapper">
               <div className="price">
                 <MantelIcon width={34} height={34} className="cronos" />{' '}
-                {formatEther(dataAsk.ask.price)}.00
+                {dataAsk && dataAsk['ask']
+                  ? formatEther(dataAsk?.ask.price)
+                  : 0}
+                .00
               </div>
               <div className="timer-content">
                 <div className="flex-content">
@@ -86,7 +98,11 @@ const NftDetails: React.FC<INftDetails> = ({ detailsData, dataAsk, owner }) => {
                   <p>Ends: </p>
                 </div>
                 <div>
-                  <p>in {new Date(dataAsk.ask.endTime).getDay()} days</p>
+                  {dataAsk && dataAsk['ask'] ? (
+                    <p> in {new Date(dataAsk.ask.endTime).getDay()} days</p>
+                  ) : (
+                    <p>No End Time</p>
+                  )}
                 </div>
               </div>
             </div>
@@ -113,21 +129,21 @@ const NftDetails: React.FC<INftDetails> = ({ detailsData, dataAsk, owner }) => {
           </div>
 
           <BuyNFT
-            dataAsk={dataAsk}
+            dataAsk={dataAsk as IMarketplace}
             open={open}
             owner={owner}
             setOpen={setOpen}
           />
 
           <MakeOffer
-            collectionAddress={dataAsk.collectionAddress}
+            collectionAddress={dataAsk?.collectionAddress as string}
             openOffer={openOffer}
             owner={owner}
             setOpenOffer={setOpenOffer}
           />
         </div>
         <div className="offer-wrapper">
-          <AcceptOffer owner={owner} dataAsk={dataAsk} />
+          <AcceptOffer owner={owner} dataAsk={dataAsk as IMarketplace} />
         </div>
       </div>
     </div>

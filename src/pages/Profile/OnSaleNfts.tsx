@@ -28,7 +28,6 @@ const OnSaleNfts = () => {
         `${baseURL}/marketplace/`,
       )
 
-      console.log(data)
       const mintexchangeContract = new ethers.Contract(
         MINTED_EXCHANGE,
         mintAbi,
@@ -71,37 +70,12 @@ const OnSaleNfts = () => {
           }),
       )
       setData([...filteredData])
-      console.log(filteredData)
-      // const nft2contract = new ethers.Contract(
-      //   NFT2Address,
-      //   NFTAbi,
-      //   signerData as any,
-      // )
-
-      // const totalIds = Number((await nft2contract.totalSupply()).toString())
-      // const result = await Promise.all(
-      //   Array.from({ length: totalIds }).map(async (_, id) => {
-      //     const address = await nft2contract.ownerOf(id)
-      //     const details = await nft2contract.tokenURI(id)
-
-      //     console.log(details)
-      //     return {
-      //       Id: id.toString(),
-      //       owner: address,
-      //       nftAddress: NFT2Address,
-      //       details: details,
-      //     }
-      //   }),
-      // )
-      // setData([...result1])
     } catch (error) {
       console.log(error)
     } finally {
       setLoading(false)
     }
   }, [address, signerData])
-
-  console.log(data)
 
   useEffect(() => {
     getData()
@@ -117,20 +91,17 @@ const OnSaleNfts = () => {
 
   return (
     <div className="card_wrapper">
-      {data.map(
-        (f, i) => (
-          <OnSaleFixedCard
-            key={i}
-            owner={f.owner}
-            status={f.status}
-            details={f.details}
-            nonce={f.dataAsk.ask.nonce}
-            tokenId={f.Id}
-            dataAsk={f.dataAsk}
-          />
-        ),
-        // )),
-      )}
+      {data.map((f, i) => (
+        <OnSaleFixedCard
+          key={i}
+          owner={f.owner}
+          status={f.status}
+          details={f.details}
+          nonce={f.dataAsk.ask.nonce}
+          tokenId={f.Id}
+          dataAsk={f.dataAsk}
+        />
+      ))}
     </div>
   )
 }

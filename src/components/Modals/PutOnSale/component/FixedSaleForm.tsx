@@ -32,7 +32,7 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
 }) => {
   const { data: nonceData, fetch } = useUserStore()
   const { address } = useAccount()
-  const { data: signerData } = useSigner()
+  const { data: signerData, refetch } = useSigner()
   const { setTransaction } = useTransactionModal()
   const validationSchema = Yup.object({
     amount: Yup.number()
@@ -188,6 +188,7 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
       })
       console.log(data)
       fetch(address)
+      refetch()
       setTransaction({
         loading: true,
         status: 'success',

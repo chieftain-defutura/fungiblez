@@ -6,7 +6,6 @@ import axios from 'axios'
 import { MINTED_EXCHANGE, NFT1Address } from 'utils/address'
 import NFTAbi from '../../utils/abi/nft.json'
 import mintAbi from '../../utils/abi/minted.json'
-import { IMarketplace } from 'constants/types'
 import FixedCard from './component/FixedCard'
 import { CardLoader } from 'components'
 import { baseURL } from 'api'
@@ -21,14 +20,12 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
   const { address } = useAccount()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any[]>([])
-  // const [marketplaceData, setMarketplaceData] = useState<IMarketplace[]>([])
 
-  console.log(data)
   const getData = useCallback(async () => {
     try {
       if (!address || !signerData) return
 
-      const { data } = await axios.get<IMarketplace[]>(
+      const { data: marketplaceData } = await axios.get(
         `${baseURL}/marketplace/`,
       )
       const mintexchangeContract = new ethers.Contract(
@@ -42,8 +39,52 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
         NFTAbi,
         signerData as any,
       )
+      // const result = await Promise.all(
+      //   data.map(async (f, i) => {
+      //     const nonce =
+      //       await mintexchangeContract.isUserOrderNonceExecutedOrCancelled(
+      //         f.ask.signer,
+      //         f.ask.nonce,
+      //       )
+
+      //     return { ...f, isfinished: nonce }
+      //   }),
+      // )
+
+      // const filteredData = await Promise.all(
+      //   result
+      //     .filter((f) => f.isfinished === false)
+      //     .map(async (s) => {
+      //       const address = await nftContract1.ownerOf(s.tokenId)
+      //       const details = await nftContract1.tokenURI(s.tokenId)
+      //       return {
+      //         dataAsk: s,
+      //         details: details,
+      //         owner: address,
+      //         Id: s.tokenId,
+      //       }
+      //     }),
+      // )
+      // setData([...filteredData])
+
+      const totalId = Number((await nftContract1.totalSupply()).toString())
+
+      const result1 = await Promise.all(
+        Array.from({ length: totalId }).map(async (s, id) => {
+          const address = await nftContract1.ownerOf(id)
+          const details = await nftContract1.tokenURI(id)
+
+          return {
+            Id: id.toString(),
+            owner: address,
+            nftAddress: NFT1Address,
+            details: details,
+          }
+        }),
+      )
+
       const result = await Promise.all(
-        data.map(async (f, i) => {
+        marketplaceData.map(async (f: any) => {
           const nonce =
             await mintexchangeContract.isUserOrderNonceExecutedOrCancelled(
               f.ask.signer,
@@ -54,74 +95,31 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
         }),
       )
 
-      console.log(result)
-
       const filteredData = await Promise.all(
-        result
-          .filter((f) => f.isfinished === false)
-          .map(async (s, id) => {
-            const address = await nftContract1.ownerOf(s.tokenId)
-            const details = await nftContract1.tokenURI(s.tokenId)
-            console.log(address)
-            console.log(details)
-            return {
-              dataAsk: s,
-              details: details,
-              owner: address,
-              Id: s.tokenId,
-            }
-          }),
+        result.map(async (s: any) => {
+          const address = await nftContract1.ownerOf(s.tokenId)
+          const details = await nftContract1.tokenURI(s.tokenId)
+
+          return {
+            dataAsk: s,
+            details: details,
+            owner: address,
+            nftAddress: NFT1Address,
+            Id: s.tokenId,
+          }
+        }),
       )
 
-      setData([...filteredData])
-      console.log(filteredData)
+      const data = [...filteredData, ...result1]
 
-      // setMarketplaceData(data)
+      console.log(data)
 
-      // setLoading(true)
-      // const nftContract1 = new ethers.Contract(
-      //   NFT1Address,
-      //   NFTAbi,
-      //   signerData as any,
-      // )
+      const unique = data.filter(
+        (obj, index) => data.findIndex((item) => item.Id === obj.Id) === index,
+      )
 
-      // const totalIdsNft1 = Number((await nftContract1.totalSupply()).toString())
-
-      // const result1 = await Promise.all(
-      //   Array.from({ length: totalIdsNft1 }).map(async (_, id) => {
-      //     const address = await nftContract1.ownerOf(id)
-      //     const details = await nftContract1.tokenURI(id)
-      //     return {
-      //       Id: id.toString(),
-      //       owner: address,
-      //       nftAddress: NFT1Address,
-      //       details: details,
-      //     }
-      //   }),
-      // )
-
-      // const nft2contract = new ethers.Contract(
-      //   NFT2Address,
-      //   NFTAbi,
-      //   signerData as any,
-      // )
-
-      // const totalIds = Number((await nft2contract.totalSupply()).toString())
-      // const result = await Promise.all(
-      //   Array.from({ length: totalIds }).map(async (_, id) => {
-      //     const address = await nft2contract.ownerOf(id + 1)
-      //     const details = await nft2contract.tokenURI(id + 1)
-
-      //     console.log(details)
-      //     return {
-      //       Id: (id + 1).toString(),
-      //       owner: address,
-      //       nftAddress: NFT2Address,
-      //       details: details,
-      //     }
-      //   }),
-      // )
-      // setData([...result1])
+      console.log(unique)
+      setData([...unique])
     } catch (error) {
       console.log('------Error On Profile--------')
       console.log(error)
@@ -133,6 +131,8 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
   useEffect(() => {
     getData()
   }, [getData])
+
+  console.log(data)
 
   // @typescript-eslint/no-unused-vars
 
@@ -155,6 +155,7 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
             details={f.details}
             owner={f.owner}
             dataAsk={f.dataAsk}
+            nftAddress={f.nftAddress}
             dataOrderHash={f.orderHash}
           />
         </>

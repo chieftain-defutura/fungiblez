@@ -40,7 +40,7 @@ const OnSaleFixedCard: React.FC<IData> = ({ tokenId, details, nonce }) => {
   }>()
 
   const handleRemove = async () => {
-    if (!address || !signerData) return
+    if (!address || !signerData || !nonce) return
 
     try {
       setTransaction({ loading: true, status: 'pending' })

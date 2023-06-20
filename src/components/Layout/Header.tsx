@@ -21,8 +21,7 @@ const Header: React.FC<{
   setOpenBanner: React.Dispatch<React.SetStateAction<boolean>>
   openBanner: boolean
 }> = ({ setOpenBanner, openBanner }) => {
-  const { data, fetch } = useUserStore()
-  console.log(data.nonce)
+  const { fetch } = useUserStore()
   const { address } = useAccount()
   const [sidebar, setSidebar] = useState(false)
 

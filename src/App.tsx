@@ -34,7 +34,10 @@ const App: React.FC = () => {
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="*" element={<PageNotFound />} />
             {/* <Route path="/details" element={<Details />} /> */}
-            <Route path="/nftdetails/:id" element={<NftDetailsPage />} />
+            <Route
+              path="/nftdetails/:collectionAddress/:id"
+              element={<NftDetailsPage />}
+            />
           </Fragment>
         </Routes>
         <Footer />

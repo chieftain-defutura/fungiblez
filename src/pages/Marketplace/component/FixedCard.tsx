@@ -17,6 +17,7 @@ interface IData {
   tokenId: string
   owner: string
   details: any
+  nftAddress: string
   status: string
   dataAsk: IMarketplace
   dataOrderHash: {
@@ -30,7 +31,7 @@ const FixedCard: React.FC<IData> = ({
   owner,
   status,
   dataAsk,
-  dataOrderHash,
+  nftAddress,
   details,
 }) => {
   const { address } = useAccount()
@@ -46,13 +47,11 @@ const FixedCard: React.FC<IData> = ({
   const getData = useCallback(async () => {
     const { data } = await axios.get(`https://ipfs.io/ipfs/${details}`)
     setDetailsData(data)
-    console.log(data)
   }, [details])
 
   useEffect(() => {
     getData()
   }, [getData])
-  console.log(dataAsk)
 
   const handleWCRO = async () => {
     setOpen(false)
@@ -209,7 +208,7 @@ const FixedCard: React.FC<IData> = ({
   //@typescript-eslint/no-unused-vars
 
   return (
-    <Link to={`/nftdetails/${tokenId}`}>
+    <Link to={`/nftdetails/${nftAddress}/${tokenId}`}>
       <div className="nft_card">
         <div className="nft_card-container">
           <div className="nft_card-container_image">
@@ -237,7 +236,19 @@ const FixedCard: React.FC<IData> = ({
             onClick={(e) => e.preventDefault()}
           >
             {address?.toLowerCase() !== owner.toLowerCase() ? (
-              <Button onClick={() => setOpen(true)}>Buy</Button>
+              dataAsk ? (
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <Button onClick={() => setOpen(true)}>Buy</Button>
+                  <Button
+                    variant="primary-outline"
+                    onClick={() => setOpen(true)}
+                  >
+                    MakeOffer
+                  </Button>
+                </div>
+              ) : (
+                <Button onClick={() => setOpen(true)}>MakeOffer</Button>
+              )
             ) : (
               <Button>Owner</Button>
             )}

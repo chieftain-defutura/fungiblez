@@ -10,7 +10,6 @@ interface ILazyImage {
 
 const LazyImage: React.FC<ILazyImage> = ({ alt, src }) => {
   const [isError, setIsError] = useState(false)
-  console.log(isError)
   return (
     <Fragment>
       {!isError && src !== undefined ? (

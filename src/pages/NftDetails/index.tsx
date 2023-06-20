@@ -10,7 +10,7 @@ import NFTAbi from '../../utils/abi/nft.json'
 import NftDetails from './NftDetails'
 
 const NftDetailsPage: React.FC = () => {
-  const { id } = useParams()
+  const { id, collectionAddress } = useParams()
   const { address } = useAccount()
   const { data: signerData } = useSigner()
   const [loading, setLoading] = useState(false)
@@ -21,48 +21,33 @@ const NftDetailsPage: React.FC = () => {
     description: string
     image: string
   }>()
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<IMarketplace>()
+  const [detailaddress, setDetailsAddress] = useState('')
   console.log(data)
-
+  console.log(detailaddress)
+  console.log(detailsData)
   const getData = useCallback(async () => {
     try {
-      if (!address || !signerData) return
+      if (!address || !signerData || !id || !collectionAddress) return
 
-      const { data } = await axios.get<IMarketplace[]>(
-        `${baseURL}/marketplace/`,
+      const { data } = await axios.get(
+        `${baseURL}/marketplace/${collectionAddress}/${id}`,
       )
-
+      setData(data)
+      console.log(data)
       const nftContract1 = new ethers.Contract(
         NFT1Address,
         NFTAbi,
         signerData as any,
       )
 
-      let details = ''
-
-      const filteredData = await Promise.all(
-        data
-          .filter((f) => f.tokenId === id)
-          .map(async (s, i) => {
-            const address = await nftContract1.ownerOf(id)
-            details = await nftContract1.tokenURI(id)
-            console.log(address)
-            console.log(details)
-            return {
-              dataAsk: s,
-              details: details,
-              owner: address,
-              Id: id,
-            }
-          }),
-      )
-
+      const detailaddress = await nftContract1.ownerOf(id)
+      const details = await nftContract1.tokenURI(id)
+      setDetailsAddress(detailaddress)
       const { data: detailsdata } = await axios.get(
         `https://ipfs.io/ipfs/${details}`,
       )
       setDetailsData(detailsdata)
-
-      setData([...filteredData])
     } catch (error) {
       console.log('------Error On Profile--------')
       console.log(error)
@@ -74,17 +59,18 @@ const NftDetailsPage: React.FC = () => {
   useEffect(() => {
     getData()
   }, [getData])
+
+  if (!data) {
+    return <div>no data</div>
+  }
   return (
     <div>
-      {data.map((f, i) => (
-        <NftDetails
-          key={i}
-          detailsData={detailsData}
-          dataAsk={f.dataAsk}
-          owner={f.owner}
-          id={id as string}
-        />
-      ))}
+      <NftDetails
+        detailsData={detailsData}
+        dataAsk={data as IMarketplace}
+        owner={detailaddress}
+        id={id as string}
+      />
     </div>
   )
 }

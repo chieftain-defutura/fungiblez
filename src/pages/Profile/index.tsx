@@ -11,16 +11,11 @@ import { ReactComponent as ShareIcon } from 'assets/icons/share.svg'
 import MyNfts from './MyNfts'
 
 import { useAccount } from 'wagmi'
-import OnSaleNfts from './OnSaleNfts'
 
 const profileLinks = [
   {
-    name: 'Items',
+    name: 'My Items',
     link: '/profile/',
-  },
-  {
-    name: 'On sale',
-    link: '/profile/onsale',
   },
 ]
 
@@ -68,7 +63,6 @@ const Profile: React.FC<{}> = () => {
           </nav>
           <Routes>
             <Route path="/" element={<MyNfts />} />
-            <Route path="/onsale" element={<OnSaleNfts />} />
           </Routes>
         </div>
       </div>

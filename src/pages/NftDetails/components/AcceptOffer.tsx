@@ -169,8 +169,6 @@ const Offer: React.FC<IOffer> = ({ owner, data, dataAsk }) => {
         dataAsk.orderHash.s,
       ]
 
-      console.log(takerAsk)
-      console.log(makerBid)
       const tx = await contract.matchBidWithTakerAsk(takerAsk, makerBid)
       await tx.wait()
       console.log('saled')
