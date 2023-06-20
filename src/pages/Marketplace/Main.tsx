@@ -132,8 +132,7 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
     getData()
   }, [getData])
 
-  console.log(data)
-
+  // console.log(data.filter((f) => f.dataAsk?.isfinished === false).map((s) => s))
   // @typescript-eslint/no-unused-vars
 
   if (loading) {

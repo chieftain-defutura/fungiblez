@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { formatEther } from 'helpers/formatters'
 import { IMarketplace } from 'constants/types'
 import { Link } from 'react-router-dom'
+import MakeOffer from 'pages/NftDetails/components/MakeOffer'
 
 interface IData {
   tokenId: string
@@ -35,9 +36,10 @@ const FixedCard: React.FC<IData> = ({
   details,
 }) => {
   const { address } = useAccount()
-  const { data: signerData } = useSigner()
+  const { data: signerData, refetch } = useSigner()
   const { setTransaction } = useTransactionModal()
   const [open, setOpen] = useState(false)
+  const [openOffer, setOpenOffer] = useState(false)
   const [detailsData, setDetailsData] = useState<{
     name: string
     description: string
@@ -113,6 +115,7 @@ const FixedCard: React.FC<IData> = ({
 
       const tx = await contract.matchAskWithTakerBid(takerBid, makerAsk)
       await tx.wait()
+      refetch()
       console.log('saled')
       setTransaction({ loading: true, status: 'success' })
     } catch (error) {
@@ -191,6 +194,7 @@ const FixedCard: React.FC<IData> = ({
         // { value: ethers.utils.parseEther(`${dataAsk.price}`).toString() },
       )
       await tx.wait()
+      refetch()
       console.log('saled')
       setTransaction({ loading: true, status: 'success' })
     } catch (error) {
@@ -206,7 +210,7 @@ const FixedCard: React.FC<IData> = ({
     }
   }
   //@typescript-eslint/no-unused-vars
-
+  // console.log(dataAsk.isfinished)
   return (
     <Link to={`/nftdetails/${nftAddress}/${tokenId}`}>
       <div className="nft_card">
@@ -238,21 +242,31 @@ const FixedCard: React.FC<IData> = ({
             {address?.toLowerCase() !== owner.toLowerCase() ? (
               dataAsk ? (
                 <div style={{ display: 'flex', gap: '10px' }}>
-                  <Button onClick={() => setOpen(true)}>Buy</Button>
-                  <Button
-                    variant="primary-outline"
-                    onClick={() => setOpen(true)}
-                  >
-                    MakeOffer
-                  </Button>
+                  {dataAsk.isfinished === false && (
+                    <Button
+                      variant="primary-outline"
+                      onClick={() => setOpen(true)}
+                    >
+                      Buy
+                    </Button>
+                  )}
+
+                  <Button onClick={() => setOpenOffer(true)}>MakeOffer</Button>
                 </div>
               ) : (
-                <Button onClick={() => setOpen(true)}>MakeOffer</Button>
+                <Button onClick={() => setOpenOffer(true)}>MakeOffer</Button>
               )
             ) : (
               <Button>Owner</Button>
             )}
           </div>
+
+          <MakeOffer
+            collectionAddress={nftAddress}
+            owner={owner}
+            openOffer={openOffer}
+            setOpenOffer={setOpenOffer}
+          />
 
           <Backdrop handleClose={() => setOpen(false)} isOpen={open}>
             <AnimatePresence exitBeforeEnter>

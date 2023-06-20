@@ -95,6 +95,7 @@ export interface IMarketplace {
     minPercentageToAsk: number
     params: string
   }
+  isfinished?: boolean
   offers: [
     {
       isOrderAsk: boolean
