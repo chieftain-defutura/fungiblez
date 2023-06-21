@@ -25,7 +25,6 @@ interface IAcceptOffer {
 }
 const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
   const { id, collectionAddress } = useParams()
-  const { address } = useAccount()
   const [data, setData] = useState<IMarketplace>()
 
   const getData = useCallback(async () => {
@@ -48,32 +47,24 @@ const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
   }
   return (
     <>
-      {data?.offers.map((f) => (
-        <div className="offers-wrapper">
-          <h2>Offers</h2>
-
-          <div className="offer-price-content">
-            <div className="offer-price-para">
-              <h6>Price</h6>
-              <div className="content">
-                <MantelIcon width={34} height={34} className="cronos" />
-                <p>{formatEther(f.price)}.00</p>
-              </div>
-              {owner === address && (
-                <div className="hand-img">
-                  <img src={HandImg} alt="" />
-                  {data.offers.map((f) => (
-                    <Offer data={f} dataAsk={dataAsk} owner={owner} />
-                  ))}
-                </div>
-              )}
-            </div>
-            {data.offers.map((f) => (
-              <OfferSigner endTime={f.endTime} signer={f.signer} />
-            ))}
-          </div>
+      <div className="offers-wrapper">
+        <h2>Offers</h2>
+        <div className="offer-price-para">
+          <h6>Price</h6>
+          <h6>Expire Date</h6>
+          <h6>From</h6>
         </div>
-      ))}
+        {data.offers.map((f) => (
+          <Offer
+            date={f.endTime}
+            fromAddress={f.signer}
+            price={f.price}
+            data={f}
+            dataAsk={dataAsk}
+            owner={owner}
+          />
+        ))}
+      </div>
     </>
   )
 }
@@ -81,7 +72,9 @@ const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
 export default AcceptOffer
 
 interface IOffer {
-  owner: string
+  price: number
+  date: any
+  fromAddress: string
   data: {
     isOrderAsk: boolean
     signer: string
@@ -98,9 +91,17 @@ interface IOffer {
     params: string
   }
   dataAsk: IMarketplace
+  owner: string
 }
 
-const Offer: React.FC<IOffer> = ({ owner, data, dataAsk }) => {
+const Offer: React.FC<IOffer> = ({
+  price,
+  date,
+  fromAddress,
+  data,
+  dataAsk,
+  owner,
+}) => {
   const { address } = useAccount()
   const { data: signerData, refetch } = useSigner()
   const { setTransaction } = useTransactionModal()
@@ -182,42 +183,33 @@ const Offer: React.FC<IOffer> = ({ owner, data, dataAsk }) => {
   }
 
   return (
-    <div>
-      {owner === address && (
-        <>
-          <p onClick={handleAcceptOfferWithWcro}>Accept Offer </p>
-        </>
-      )}
+    <div className="details_wrapper">
+      <div className="price" style={{ display: 'flex', alignItems: 'center' }}>
+        <MantelIcon width={34} height={34} className="cronos" />
+        <p>{formatEther(price)}.00</p>
+        {owner === address && (
+          <div className="hand-img">
+            <img src={HandImg} alt="" />
+            {owner === address && (
+              <p onClick={handleAcceptOfferWithWcro}>Accept Offer </p>
+            )}
+          </div>
+        )}
+      </div>
+      <div className="date">
+        {new Date(date).getDay() === 0 ? (
+          <p>Offer Ended</p>
+        ) : (
+          <p>in {new Date(date).getDay()} days</p>
+        )}
+      </div>
+      <div className="signer">
+        <p>
+          {' '}
+          {fromAddress?.slice(0, 6)}...
+          {fromAddress?.slice(fromAddress?.length - 6)}
+        </p>
+      </div>
     </div>
-  )
-}
-
-interface IOfferSigner {
-  signer: string
-  endTime: any
-}
-const OfferSigner: React.FC<IOfferSigner> = ({ signer, endTime }) => {
-  return (
-    <>
-      <div className="offer-price-para">
-        <h6>Expiration</h6>
-        <div className="content">
-          {new Date(endTime).getDay() === 0 ? (
-            <p>Offer Ended</p>
-          ) : (
-            <p>in {new Date(endTime).getDay()} days</p>
-          )}
-        </div>
-      </div>
-      <div className="offer-price-para">
-        <h6>From</h6>
-        <div className="content">
-          <p>
-            {signer?.slice(0, 6)}...
-            {signer?.slice(signer?.length - 6)}
-          </p>
-        </div>
-      </div>
-    </>
   )
 }

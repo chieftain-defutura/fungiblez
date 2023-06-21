@@ -90,45 +90,45 @@
     text-transform: capitalize;
     font-size: 28px;
   }
-  .offer-price-content {
+  .offer-price-para {
+    margin-top: 12px;
     display: flex;
     align-items: center;
+    gap: 10px;
     justify-content: space-between;
-    margin: 12px 0;
+    text-align: center;
 
-    .offer-price-para {
-      margin-top: 12px;
-      h6 {
-        font-size: 16px;
-        margin-bottom: 38px;
-        font-weight: 100;
-      }
-      .content {
-        display: flex;
-        align-items: center;
-      }
-      .hand-img {
-        border: 1px solid #e57f8c;
-        border-radius: 24px;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 16px;
-        img {
-          width: 18px;
-        }
-        p {
-          font-size: 12px;
-        }
-      }
+    h6 {
+      font-size: 16px;
+      margin-bottom: 38px;
+      font-weight: 100;
     }
+    // .content {
+    //   display: flex;
+    //   align-items: center;
+    // }
+    // .hand-img {
+    //   border: 1px solid #e57f8c;
+    //   border-radius: 24px;
+    //   display: flex;
+    //   align-items: center;
+    //   gap: 4px;
+    //   padding: 4px 16px;
+    //   img {
+    //     width: 18px;
+    //   }
+    //   p {
+    //     font-size: 12px;
+    //   }
+    // }
   }
 }
 
 .details_wrapper {
-  background-color: rgba(229, 238, 245, 0.09);
-  padding: 27px 26px;
-  margin-top: 36px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
   h2 {
     text-transform: capitalize;
     font-size: 28px;

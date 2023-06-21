@@ -24,6 +24,7 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
 
   const getData = useCallback(async () => {
     try {
+      setLoading(true)
       if (!address || !signerData) return
 
       const mintexchangeContract = new ethers.Contract(

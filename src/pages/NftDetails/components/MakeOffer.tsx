@@ -154,9 +154,9 @@ const MakeOffer: React.FC<IMakeOffer> = ({
       console.log(nonceData)
 
       console.log('set')
-      const data = await axios.post(`${baseURL}/marketplace/create`, {
-        userAddress: address,
+      const data = await axios.post(`${baseURL}/marketplace/makeoffer`, {
         tokenId: id,
+        userAddress: owner,
         collectionAddress: collectionAddress,
         offers: {
           isOrderAsk: false,
