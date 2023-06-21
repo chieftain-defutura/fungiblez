@@ -7,7 +7,7 @@ import { MINTED_EXCHANGE, NFT1Address } from 'utils/address'
 import NFTAbi from '../../utils/abi/nft.json'
 import mintAbi from '../../utils/abi/minted.json'
 import FixedCard from './component/FixedCard'
-import { CardLoader } from 'components'
+import { Button, CardLoader } from 'components'
 import { baseURL } from 'api'
 import { IMarketplace } from 'constants/types'
 
@@ -21,6 +21,13 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
   const { address } = useAccount()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<any[]>([])
+  const [visible, setVisible] = useState(10)
+  const showMore = () => {
+    setVisible((preValue) => preValue + 10)
+  }
+  const showLess = () => {
+    setVisible((preValue) => preValue - 10)
+  }
 
   const getData = useCallback(async () => {
     try {
@@ -118,22 +125,39 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
   }
 
   return (
-    <div className="card_wrapper">
-      {data.map((f, i) => (
-        <>
-          <FixedCard
-            key={i}
-            status=""
-            tokenId={f.Id}
-            details={f.details}
-            owner={f.owner}
-            dataAsk={f.data}
-            nftAddress={f.nftAddress}
-            dataOrderHash={f.orderHash}
-            finished={f.isfinished}
-          />
-        </>
-      ))}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+      <div className="card_wrapper">
+        {data.slice(0, visible).map((f, i) => (
+          <>
+            <FixedCard
+              key={i}
+              status=""
+              tokenId={f.Id}
+              details={f.details}
+              owner={f.owner}
+              dataAsk={f.data}
+              nftAddress={f.nftAddress}
+              dataOrderHash={f.orderHash}
+              finished={f.isfinished}
+            />
+          </>
+        ))}
+      </div>
+      <div style={{ margin: 'auto' }}>
+        {visible === data.length ? (
+          <div onClick={showLess}>
+            <Button variant="primary-outline">
+              <span>Show Less</span>
+            </Button>
+          </div>
+        ) : (
+          <div onClick={showMore}>
+            <Button variant="primary">
+              <span>Show More</span>
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

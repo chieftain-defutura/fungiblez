@@ -183,10 +183,12 @@ const Offer: React.FC<IOffer> = ({
   }
 
   return (
-    <div className="details_wrapper">
+    <div className="details_offer_wrapper">
       <div className="price" style={{ display: 'flex', alignItems: 'center' }}>
-        <MantelIcon width={34} height={34} className="cronos" />
-        <p>{formatEther(price)}.00</p>
+        <div className="display-price">
+          <MantelIcon width={34} height={34} className="cronos" />
+          <p>{formatEther(price)}.00</p>
+        </div>
         {owner === address && (
           <div className="hand-img">
             <img src={HandImg} alt="" />
@@ -205,7 +207,6 @@ const Offer: React.FC<IOffer> = ({
       </div>
       <div className="signer">
         <p>
-          {' '}
           {fromAddress?.slice(0, 6)}...
           {fromAddress?.slice(fromAddress?.length - 6)}
         </p>
