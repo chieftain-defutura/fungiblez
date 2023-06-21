@@ -57,9 +57,10 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
       )
 
       const ApprovedForAll = await contract.isApprovedForAll(
-        NFT1Address,
+        address,
         TRANSFER_MANAGER_ERC721,
       )
+      console.log(ApprovedForAll)
 
       if (!ApprovedForAll) {
         const tx = await contract.setApprovalForAll(
@@ -213,7 +214,10 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
         {({ errors, touched }) => (
           <Form>
             <div className="fixed-sale-form">
-              <div style={{ paddingBottom: '20px' }}>
+              <div
+                style={{ paddingBottom: '20px' }}
+                onClick={(e) => e.preventDefault()}
+              >
                 <Field type="number" placeholder="Amount" name="amount" />
                 {touched.amount && errors.amount ? (
                   <p>{errors.amount}</p>

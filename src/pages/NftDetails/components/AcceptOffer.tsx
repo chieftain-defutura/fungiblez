@@ -24,22 +24,28 @@ interface IAcceptOffer {
   dataAsk: IMarketplace
 }
 const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
-  const { id } = useParams()
+  const { id, collectionAddress } = useParams()
   const { address } = useAccount()
   const [data, setData] = useState<IMarketplace>()
 
   const getData = useCallback(async () => {
     const { data } = await axios.get<IMarketplace>(
-      `${baseURL}/marketplace/${id}`,
+      `${baseURL}/marketplace/${collectionAddress}/${id}`,
     )
     setData(data)
-  }, [id])
+  }, [id, collectionAddress])
+
+  //react-hooks/exhaustive-deps
 
   useEffect(() => {
     getData()
   }, [getData])
 
   console.log(data)
+
+  if (!data) {
+    return <div>No Offers</div>
+  }
   return (
     <>
       {data?.offers.map((f) => (
@@ -56,29 +62,15 @@ const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
               {owner === address && (
                 <div className="hand-img">
                   <img src={HandImg} alt="" />
-                  <Offer
-                    data={data.offers[0]}
-                    dataAsk={dataAsk}
-                    owner={owner}
-                  />
+                  {data.offers.map((f) => (
+                    <Offer data={f} dataAsk={dataAsk} owner={owner} />
+                  ))}
                 </div>
               )}
             </div>
-            <div className="offer-price-para">
-              <h6>Expiration</h6>
-              <div className="content">
-                <p>in {new Date(data.ask.endTime).getDay()} days</p>
-              </div>
-            </div>
-            <div className="offer-price-para">
-              <h6>From</h6>
-              <div className="content">
-                <p>
-                  {dataAsk.ask.signer?.slice(0, 6)}...
-                  {dataAsk.ask.signer?.slice(dataAsk.ask.signer?.length - 6)}
-                </p>
-              </div>
-            </div>
+            {data.offers.map((f) => (
+              <OfferSigner endTime={f.endTime} signer={f.signer} />
+            ))}
           </div>
         </div>
       ))}
@@ -197,5 +189,35 @@ const Offer: React.FC<IOffer> = ({ owner, data, dataAsk }) => {
         </>
       )}
     </div>
+  )
+}
+
+interface IOfferSigner {
+  signer: string
+  endTime: any
+}
+const OfferSigner: React.FC<IOfferSigner> = ({ signer, endTime }) => {
+  return (
+    <>
+      <div className="offer-price-para">
+        <h6>Expiration</h6>
+        <div className="content">
+          {new Date(endTime).getDay() === 0 ? (
+            <p>Offer Ended</p>
+          ) : (
+            <p>in {new Date(endTime).getDay()} days</p>
+          )}
+        </div>
+      </div>
+      <div className="offer-price-para">
+        <h6>From</h6>
+        <div className="content">
+          <p>
+            {signer?.slice(0, 6)}...
+            {signer?.slice(signer?.length - 6)}
+          </p>
+        </div>
+      </div>
+    </>
   )
 }

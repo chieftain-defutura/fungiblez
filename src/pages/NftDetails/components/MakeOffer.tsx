@@ -6,7 +6,6 @@ import { ethers } from 'ethers'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTransactionModal } from 'hooks'
 import React from 'react'
-import { useParams } from 'react-router-dom'
 import { MINTED_EXCHANGE, STRATEGY, WCRO } from 'utils/address'
 import { useAccount, useSigner } from 'wagmi'
 import TokenAbi from '../../../utils/abi/token.json'
@@ -18,6 +17,7 @@ interface IMakeOffer {
   openOffer: boolean
   owner: string
   collectionAddress: string
+  id: string
 }
 
 const MakeOffer: React.FC<IMakeOffer> = ({
@@ -25,8 +25,8 @@ const MakeOffer: React.FC<IMakeOffer> = ({
   openOffer,
   owner,
   collectionAddress,
+  id,
 }) => {
-  const { id } = useParams()
   const { data: nonceData, fetch } = useUserStore()
   const { address } = useAccount()
   const { data: signerData, refetch } = useSigner()
@@ -154,8 +154,10 @@ const MakeOffer: React.FC<IMakeOffer> = ({
       console.log(nonceData)
 
       console.log('set')
-      const data = await axios.patch(`${baseURL}/marketplace/offer/${id}`, {
+      const data = await axios.post(`${baseURL}/marketplace/create`, {
         userAddress: address,
+        tokenId: id,
+        collectionAddress: collectionAddress,
         offers: {
           isOrderAsk: false,
           signer: address,
@@ -218,7 +220,10 @@ const MakeOffer: React.FC<IMakeOffer> = ({
                       {({ errors, touched }) => (
                         <Form>
                           <div className="fixed-sale-form">
-                            <div style={{ paddingBottom: '20px' }}>
+                            <div
+                              style={{ paddingBottom: '20px' }}
+                              onClick={(e) => e.preventDefault()}
+                            >
                               <Field
                                 type="number"
                                 placeholder="Price"
@@ -228,7 +233,10 @@ const MakeOffer: React.FC<IMakeOffer> = ({
                                 <p>{errors.price}</p>
                               ) : null}
                             </div>
-                            <div style={{ paddingBottom: '20px' }}>
+                            <div
+                              style={{ paddingBottom: '20px' }}
+                              onClick={(e) => e.preventDefault()}
+                            >
                               <Field
                                 type="number"
                                 placeholder="Expire Date"

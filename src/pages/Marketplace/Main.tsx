@@ -9,6 +9,7 @@ import mintAbi from '../../utils/abi/minted.json'
 import FixedCard from './component/FixedCard'
 import { CardLoader } from 'components'
 import { baseURL } from 'api'
+import { IMarketplace } from 'constants/types'
 
 interface IMarketplaceMainProps {
   selectedFilter: string | null
@@ -25,9 +26,6 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
     try {
       if (!address || !signerData) return
 
-      const { data: marketplaceData } = await axios.get(
-        `${baseURL}/marketplace/`,
-      )
       const mintexchangeContract = new ethers.Contract(
         MINTED_EXCHANGE,
         mintAbi,
@@ -39,33 +37,6 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
         NFTAbi,
         signerData as any,
       )
-      // const result = await Promise.all(
-      //   data.map(async (f, i) => {
-      //     const nonce =
-      //       await mintexchangeContract.isUserOrderNonceExecutedOrCancelled(
-      //         f.ask.signer,
-      //         f.ask.nonce,
-      //       )
-
-      //     return { ...f, isfinished: nonce }
-      //   }),
-      // )
-
-      // const filteredData = await Promise.all(
-      //   result
-      //     .filter((f) => f.isfinished === false)
-      //     .map(async (s) => {
-      //       const address = await nftContract1.ownerOf(s.tokenId)
-      //       const details = await nftContract1.tokenURI(s.tokenId)
-      //       return {
-      //         dataAsk: s,
-      //         details: details,
-      //         owner: address,
-      //         Id: s.tokenId,
-      //       }
-      //     }),
-      // )
-      // setData([...filteredData])
 
       const totalId = Number((await nftContract1.totalSupply()).toString())
 
@@ -79,47 +50,52 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
             owner: address,
             nftAddress: NFT1Address,
             details: details,
+            data: undefined,
+            isfinished: true,
           }
         }),
       )
 
       const result = await Promise.all(
-        marketplaceData.map(async (f: any) => {
-          const nonce =
-            await mintexchangeContract.isUserOrderNonceExecutedOrCancelled(
-              f.ask.signer,
-              f.ask.nonce,
-            )
+        result1.map(async (f) => {
+          const { data } = await axios.get<IMarketplace>(
+            `${baseURL}/marketplace/${f.nftAddress}/${f.Id}`,
+          )
 
-          return { ...f, isfinished: nonce }
-        }),
-      )
+          if (!data.ask) {
+            return {
+              Id: f.Id.toString(),
+              owner: f.owner,
+              nftAddress: NFT1Address,
+              details: f.details,
+              data: undefined,
+              isfinished: true,
+            }
+          }
 
-      const filteredData = await Promise.all(
-        result.map(async (s: any) => {
-          const address = await nftContract1.ownerOf(s.tokenId)
-          const details = await nftContract1.tokenURI(s.tokenId)
+          if (data.ask) {
+            const nonce =
+              await mintexchangeContract.isUserOrderNonceExecutedOrCancelled(
+                data.ask.signer,
+                data.ask.nonce,
+              )
+            console.log(nonce)
 
-          return {
-            dataAsk: s,
-            details: details,
-            owner: address,
-            nftAddress: NFT1Address,
-            Id: s.tokenId,
+            return {
+              Id: data.tokenId.toString(),
+              owner: f.owner,
+              nftAddress: NFT1Address,
+              details: f.details,
+              data: data,
+              isfinished: nonce,
+            }
           }
         }),
       )
 
-      const data = [...filteredData, ...result1]
+      console.log(result)
 
-      console.log(data)
-
-      const unique = data.filter(
-        (obj, index) => data.findIndex((item) => item.Id === obj.Id) === index,
-      )
-
-      console.log(unique)
-      setData([...unique])
+      setData([...result])
     } catch (error) {
       console.log('------Error On Profile--------')
       console.log(error)
@@ -131,9 +107,6 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
   useEffect(() => {
     getData()
   }, [getData])
-
-  // console.log(data.filter((f) => f.dataAsk?.isfinished === false).map((s) => s))
-  // @typescript-eslint/no-unused-vars
 
   if (loading) {
     return <CardLoader />
@@ -153,9 +126,10 @@ const Main: React.FC<IMarketplaceMainProps> = () => {
             tokenId={f.Id}
             details={f.details}
             owner={f.owner}
-            dataAsk={f.dataAsk}
+            dataAsk={f.data}
             nftAddress={f.nftAddress}
             dataOrderHash={f.orderHash}
+            finished={f.isfinished}
           />
         </>
       ))}

@@ -26,6 +26,7 @@ interface IData {
     s: string
     v: string
   }
+  finished: boolean
 }
 const FixedCard: React.FC<IData> = ({
   tokenId,
@@ -34,6 +35,7 @@ const FixedCard: React.FC<IData> = ({
   dataAsk,
   nftAddress,
   details,
+  finished,
 }) => {
   const { address } = useAccount()
   const { data: signerData, refetch } = useSigner()
@@ -220,7 +222,13 @@ const FixedCard: React.FC<IData> = ({
           </div>
           <div className="nft_card-container_content">
             <div>
-              <h3 style={{ fontSize: '3.2rem', lineHeight: '3.2rem' }}>
+              <h3
+                style={{
+                  fontSize: '3.2rem',
+                  lineHeight: '3.2rem',
+                  textTransform: 'capitalize',
+                }}
+              >
                 {detailsData?.name}
               </h3>
             </div>
@@ -242,14 +250,14 @@ const FixedCard: React.FC<IData> = ({
             {address?.toLowerCase() !== owner.toLowerCase() ? (
               dataAsk ? (
                 <div style={{ display: 'flex', gap: '10px' }}>
-                  {dataAsk.isfinished === false && (
+                  {finished === false ? (
                     <Button
                       variant="primary-outline"
                       onClick={() => setOpen(true)}
                     >
                       Buy
                     </Button>
-                  )}
+                  ) : null}
 
                   <Button onClick={() => setOpenOffer(true)}>MakeOffer</Button>
                 </div>
@@ -266,6 +274,7 @@ const FixedCard: React.FC<IData> = ({
             owner={owner}
             openOffer={openOffer}
             setOpenOffer={setOpenOffer}
+            id={tokenId}
           />
 
           <Backdrop handleClose={() => setOpen(false)} isOpen={open}>
@@ -292,7 +301,10 @@ const FixedCard: React.FC<IData> = ({
                             Price : {formatEther(dataAsk.ask.price)}
                           </h3>
                         </div>
-                        <div style={{ display: 'flex', gap: '5px' }}>
+                        <div
+                          style={{ display: 'flex', gap: '5px' }}
+                          onClick={(e) => e.preventDefault()}
+                        >
                           {/* <Button onClick={handleSale}>Buy</Button> */}
                           <Button style={{ width: '100%' }} onClick={handleCRO}>
                             $bit

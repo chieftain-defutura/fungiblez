@@ -23,6 +23,7 @@ interface INftDetails {
     | undefined
 
   dataAsk: IMarketplace | undefined
+  isfinish: boolean
   owner: string
   id: string
 }
@@ -30,6 +31,7 @@ interface INftDetails {
 const NftDetails: React.FC<INftDetails> = ({
   detailsData,
   dataAsk,
+  isfinish,
   owner,
   id,
 }) => {
@@ -37,7 +39,7 @@ const NftDetails: React.FC<INftDetails> = ({
   const [open, setOpen] = useState(false)
   const [openOffer, setOpenOffer] = useState(false)
 
-  console.log(dataAsk)
+  console.log(isfinish)
   return (
     <div className="nftdetailpage-container">
       <div className="left-container">
@@ -108,12 +110,15 @@ const NftDetails: React.FC<INftDetails> = ({
             </div>
             {address?.toLowerCase() !== owner.toLowerCase() ? (
               <div className="buttons">
-                <Button
-                  onClick={() => setOpen(true)}
-                  leftIcon={<img src={Cart} alt="cart" />}
-                >
-                  Buy
-                </Button>
+                {isfinish === false ? (
+                  <Button
+                    onClick={() => setOpen(true)}
+                    leftIcon={<img src={Cart} alt="cart" />}
+                  >
+                    Buy
+                  </Button>
+                ) : null}
+
                 <Button
                   variant="primary-outline"
                   onClick={() => setOpenOffer(true)}
@@ -140,6 +145,7 @@ const NftDetails: React.FC<INftDetails> = ({
             openOffer={openOffer}
             owner={owner}
             setOpenOffer={setOpenOffer}
+            id={id}
           />
         </div>
         <div className="offer-wrapper">

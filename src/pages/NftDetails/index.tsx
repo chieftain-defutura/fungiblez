@@ -4,9 +4,11 @@ import axios from 'axios'
 import { IMarketplace } from 'constants/types'
 import { ethers } from 'ethers'
 import { useParams } from 'react-router-dom'
-import { NFT1Address } from 'utils/address'
+import { MINTED_EXCHANGE, NFT1Address } from 'utils/address'
 import { useAccount, useSigner } from 'wagmi'
 import NFTAbi from '../../utils/abi/nft.json'
+import MintedABI from '../../utils/abi/minted.json'
+
 import NftDetails from './NftDetails'
 
 const NftDetailsPage: React.FC = () => {
@@ -23,6 +25,7 @@ const NftDetailsPage: React.FC = () => {
   }>()
   const [data, setData] = useState<IMarketplace>()
   const [detailaddress, setDetailsAddress] = useState('')
+  const [finished, setFinished] = useState(true)
   console.log(data)
   console.log(detailaddress)
   console.log(detailsData)
@@ -41,8 +44,25 @@ const NftDetailsPage: React.FC = () => {
         signerData as any,
       )
 
+      const contract = new ethers.Contract(
+        MINTED_EXCHANGE,
+        MintedABI,
+        signerData as any,
+      )
+
       const detailaddress = await nftContract1.ownerOf(id)
       const details = await nftContract1.tokenURI(id)
+
+      if (!data.ask) {
+        setFinished(true)
+      }
+
+      const nonce = await contract.isUserOrderNonceExecutedOrCancelled(
+        data.ask.signer,
+        data.ask.nonce,
+      )
+      setFinished(nonce)
+
       setDetailsAddress(detailaddress)
       const { data: detailsdata } = await axios.get(
         `https://ipfs.io/ipfs/${details}`,
@@ -63,6 +83,8 @@ const NftDetailsPage: React.FC = () => {
   if (!data) {
     return <div>no data</div>
   }
+
+  console.log(finished)
   return (
     <div>
       <NftDetails
@@ -70,6 +92,7 @@ const NftDetailsPage: React.FC = () => {
         dataAsk={data as IMarketplace}
         owner={detailaddress}
         id={id as string}
+        isfinish={finished as boolean}
       />
     </div>
   )
