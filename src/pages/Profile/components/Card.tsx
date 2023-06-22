@@ -80,7 +80,13 @@ const Card: React.FC<ICard> = (props) => {
           </div>
           <div className="nft_card-container_content">
             <div>
-              <h3 style={{ fontSize: '3.2rem', lineHeight: '3.2rem' }}>
+              <h3
+                style={{
+                  fontSize: '3.2rem',
+                  lineHeight: '3.2rem',
+                  textTransform: 'capitalize',
+                }}
+              >
                 {detailsData ? detailsData.name : 'unnamed'}
               </h3>
             </div>

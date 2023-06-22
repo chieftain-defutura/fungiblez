@@ -1,10 +1,7 @@
 import React from 'react'
 import { Formik, Form as FormikForm } from 'formik'
-// import nftAbi from '../../../utils/abi/nft.json'
 import { Button, TextField } from 'components'
 import { validateSingleCollectionSchema } from '../../../helpers/ValidationSchema'
-// import { useTransactionModal } from 'hooks'
-// import { useAccount, useSigner } from 'wagmi'
 
 interface IForm {
   initialState: any
@@ -12,30 +9,6 @@ interface IForm {
 }
 
 const Form: React.FC<IForm> = ({ initialState, handleSubmit }) => {
-  // const { address } = useAccount()
-  // const { data: signerData } = useSigner()
-  // const { setTransaction } = useTransactionModal()
-
-  // const handleMint = async (nftAddress: string) => {
-  //   try {
-  //     if (!signerData || !address) return
-
-  //     setTransaction({ loading: true, status: 'pending' })
-
-  //     const mintContract = new ethers.Contract(
-  //       nftAddress,
-  //       nftAbi,
-  //       signerData as any,
-  //     )
-  //     const tx = await mintContract.createNFT(address, '', '')
-  //     await tx.wait()
-  //     setTransaction({ loading: true, status: 'success' })
-  //   } catch (error: any) {
-  //     console.log(error.reason)
-  //     setTransaction({ loading: true, status: 'error', message: error.reason })
-  //   }
-  // }
-
   return (
     <Formik
       initialValues={initialState}

@@ -75,6 +75,25 @@ export interface IImageFileProps {
   url: string
 }
 
+export interface IOffers {
+  isOrderAsk: boolean
+  signer: string
+  collection: string
+  price: number
+  tokenId: number
+  amount: number
+  strategy: string
+  currency: string
+  nonce: number
+  startTime: number
+  endTime: number
+  minPercentageToAsk: number
+  params: string
+  r: string
+  s: string
+  v: string
+}
+
 export interface IMarketplace {
   userAddress: string
   status: string
@@ -96,23 +115,7 @@ export interface IMarketplace {
     params: string
   }
   isfinished?: boolean
-  offers: [
-    {
-      isOrderAsk: boolean
-      signer: string
-      collection: string
-      price: number
-      tokenId: number
-      amount: number
-      strategy: string
-      currency: string
-      nonce: number
-      startTime: number
-      endTime: number
-      minPercentageToAsk: number
-      params: string
-    },
-  ]
+  offers: IOffers[]
   orderHash: {
     r: string
     s: string

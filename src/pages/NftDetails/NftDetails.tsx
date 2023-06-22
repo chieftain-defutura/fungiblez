@@ -6,7 +6,6 @@ import { useAccount } from 'wagmi'
 import { IMarketplace } from 'constants/types'
 import { ReactComponent as MantelIcon } from '../../assets/icons/mantelIcon.svg'
 import Cart from '../../assets/icons/shopping-cart.svg'
-import Timer from '../../assets/icons/clock.svg'
 import MakeOffer from './components/MakeOffer'
 import BuyNFT from './components/BuyNFT'
 import AcceptOffer from './components/AcceptOffer'
@@ -39,7 +38,7 @@ const NftDetails: React.FC<INftDetails> = ({
   const [open, setOpen] = useState(false)
   const [openOffer, setOpenOffer] = useState(false)
 
-  console.log(isfinish)
+  console.log(owner)
   return (
     <div className="nftdetailpage-container">
       <div className="left-container">
@@ -94,19 +93,26 @@ const NftDetails: React.FC<INftDetails> = ({
                   : 0}
                 .00
               </div>
-              <div className="timer-content">
+              {/* <div className="timer-content">
                 <div className="flex-content">
                   <img src={Timer} alt="" />
                   <p>Ends: </p>
                 </div>
                 <div>
                   {dataAsk && dataAsk['ask'] ? (
-                    <p> in {new Date(dataAsk.ask.endTime).getDay()} days</p>
+                    <p>
+                      {' '}
+                      in{' '}
+                      {moment(dataAsk.ask.endTime, 'DD/MM/YYYY').fromNow(
+                        true,
+                      )}{' '}
+                      days
+                    </p>
                   ) : (
                     <p>No End Time</p>
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
             {address?.toLowerCase() !== owner.toLowerCase() ? (
               <div className="buttons">

@@ -53,6 +53,12 @@ const NftDetailsPage: React.FC = () => {
       const detailaddress = await nftContract1.ownerOf(id)
       const details = await nftContract1.tokenURI(id)
 
+      setDetailsAddress(detailaddress)
+      const { data: detailsdata } = await axios.get(
+        `https://ipfs.io/ipfs/${details}`,
+      )
+      setDetailsData(detailsdata)
+
       if (!data.ask) {
         setFinished(true)
       }
@@ -62,12 +68,6 @@ const NftDetailsPage: React.FC = () => {
         data.ask.nonce,
       )
       setFinished(nonce)
-
-      setDetailsAddress(detailaddress)
-      const { data: detailsdata } = await axios.get(
-        `https://ipfs.io/ipfs/${details}`,
-      )
-      setDetailsData(detailsdata)
     } catch (error) {
       console.log('------Error On Profile--------')
       console.log(error)
@@ -84,7 +84,7 @@ const NftDetailsPage: React.FC = () => {
     return <div>no data</div>
   }
 
-  console.log(finished)
+  console.log(data)
   return (
     <div>
       <NftDetails

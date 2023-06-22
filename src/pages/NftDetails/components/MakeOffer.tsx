@@ -174,6 +174,9 @@ const MakeOffer: React.FC<IMakeOffer> = ({
           ),
           minPercentageToAsk: 8500,
           params: '0x',
+          r: r,
+          s: s,
+          v: v,
         },
       })
       console.log(data)

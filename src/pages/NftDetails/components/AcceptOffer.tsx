@@ -1,9 +1,9 @@
-import { baseURL } from 'api'
-import axios from 'axios'
-import { IMarketplace } from 'constants/types'
+import { IMarketplace, IOffers } from 'constants/types'
 import { ethers } from 'ethers'
 import MintedABI from '../../../utils/abi/minted.json'
 import NftAbi from '../../../utils/abi/nft.json'
+
+import moment from 'moment'
 
 import { formatEther } from 'helpers/formatters'
 import { useTransactionModal } from 'hooks'
@@ -12,7 +12,6 @@ import { ReactComponent as MantelIcon } from '../../../assets/icons/mantelIcon.s
 import HandImg from '../../../assets/icons/hand.svg'
 
 import { useAccount, useSigner } from 'wagmi'
-import { useParams } from 'react-router-dom'
 import {
   MINTED_EXCHANGE,
   NFT1Address,
@@ -24,24 +23,45 @@ interface IAcceptOffer {
   dataAsk: IMarketplace
 }
 const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
-  const { id, collectionAddress } = useParams()
-  const [data, setData] = useState<IMarketplace>()
+  const { data: signerData } = useSigner()
+  const [data, setData] = useState<IOffers[]>([])
 
   const getData = useCallback(async () => {
-    const { data } = await axios.get<IMarketplace>(
-      `${baseURL}/marketplace/${collectionAddress}/${id}`,
+    const mintexchangeContract = new ethers.Contract(
+      MINTED_EXCHANGE,
+      MintedABI,
+      signerData as any,
     )
-    setData(data)
-  }, [id, collectionAddress])
 
-  //react-hooks/exhaustive-deps
+    if (!dataAsk.offers) {
+      return setData([])
+    }
+
+    const result = await Promise.all(
+      dataAsk.offers.map(async (f) => {
+        const nonce =
+          await mintexchangeContract.isUserOrderNonceExecutedOrCancelled(
+            f.signer,
+            f.nonce,
+          )
+        console.log(nonce)
+
+        return {
+          data: f,
+          isfinished: nonce,
+        }
+      }),
+    )
+
+    console.log(result)
+    const res = result.filter((f) => !f.isfinished).map((r) => r.data)
+    setData(res)
+  }, [dataAsk, signerData])
 
   useEffect(() => {
     getData()
   }, [getData])
-
-  console.log(data)
-
+  //react-hooks/exhaustive-deps
   if (!data) {
     return <div>No Offers</div>
   }
@@ -54,16 +74,20 @@ const AcceptOffer: React.FC<IAcceptOffer> = ({ owner, dataAsk }) => {
           <h6>Expire Date</h6>
           <h6>From</h6>
         </div>
-        {data.offers.map((f) => (
-          <Offer
-            date={f.endTime}
-            fromAddress={f.signer}
-            price={f.price}
-            data={f}
-            dataAsk={dataAsk}
-            owner={owner}
-          />
-        ))}
+        {data
+          .filter(
+            (f: any) => moment(f.endTime, 'DD/MM/YYYY').fromNow(true) !== '0',
+          )
+          .map((f: any) => (
+            <Offer
+              date={f.endTime}
+              fromAddress={f.signer}
+              price={f.price}
+              data={f}
+              dataAsk={dataAsk}
+              owner={owner}
+            />
+          ))}
       </div>
     </>
   )
@@ -73,7 +97,7 @@ export default AcceptOffer
 
 interface IOffer {
   price: number
-  date: any
+  date: number
   fromAddress: string
   data: {
     isOrderAsk: boolean
@@ -89,6 +113,9 @@ interface IOffer {
     endTime: number
     minPercentageToAsk: number
     params: string
+    r: string
+    s: string
+    v: string
   }
   dataAsk: IMarketplace
   owner: string
@@ -106,6 +133,7 @@ const Offer: React.FC<IOffer> = ({
   const { data: signerData, refetch } = useSigner()
   const { setTransaction } = useTransactionModal()
 
+  const endDate = new Date(date)
   const handleAcceptOfferWithWcro = async () => {
     if (!address || !signerData) return
 
@@ -119,7 +147,7 @@ const Offer: React.FC<IOffer> = ({
       )
 
       const ApprovedForAll = await NFTcontract.isApprovedForAll(
-        NFT1Address,
+        address,
         TRANSFER_MANAGER_ERC721,
       )
 
@@ -140,8 +168,8 @@ const Offer: React.FC<IOffer> = ({
         address,
         `${data.price}`,
         data.tokenId,
-        dataAsk.ask.minPercentageToAsk,
-        dataAsk.ask.params,
+        data.minPercentageToAsk,
+        data.params,
       ]
       const makerBid = [
         data.isOrderAsk,
@@ -157,9 +185,9 @@ const Offer: React.FC<IOffer> = ({
         data.endTime,
         data.minPercentageToAsk,
         data.params,
-        dataAsk.orderHash.v,
-        dataAsk.orderHash.r,
-        dataAsk.orderHash.s,
+        data.v,
+        data.r,
+        data.s,
       ]
 
       const tx = await contract.matchBidWithTakerAsk(takerAsk, makerBid)
@@ -199,11 +227,7 @@ const Offer: React.FC<IOffer> = ({
         )}
       </div>
       <div className="date">
-        {new Date(date).getDay() === 0 ? (
-          <p>Offer Ended</p>
-        ) : (
-          <p>in {new Date(date).getDay()} days</p>
-        )}
+        <p>in {moment(endDate, 'DD/MM/YYYY').fromNow(true)}</p>
       </div>
       <div className="signer">
         <p>
