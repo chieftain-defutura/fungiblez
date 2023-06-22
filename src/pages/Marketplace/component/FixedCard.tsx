@@ -250,7 +250,8 @@ const FixedCard: React.FC<IData> = ({
             {address?.toLowerCase() !== owner.toLowerCase() ? (
               dataAsk ? (
                 <div style={{ display: 'flex', gap: '10px' }}>
-                  {finished === false ? (
+                  {finished === false &&
+                  dataAsk.ask.signer.toLowerCase() === owner.toLowerCase() ? (
                     <Button
                       variant="primary-outline"
                       onClick={() => setOpen(true)}

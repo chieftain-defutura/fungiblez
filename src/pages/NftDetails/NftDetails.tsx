@@ -116,7 +116,8 @@ const NftDetails: React.FC<INftDetails> = ({
             </div>
             {address?.toLowerCase() !== owner.toLowerCase() ? (
               <div className="buttons">
-                {isfinish === false ? (
+                {isfinish === false &&
+                dataAsk?.ask.signer.toLowerCase() === owner.toLowerCase() ? (
                   <Button
                     onClick={() => setOpen(true)}
                     leftIcon={<img src={Cart} alt="cart" />}
