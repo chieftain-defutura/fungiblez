@@ -134,7 +134,7 @@ const Offer: React.FC<IOffer> = ({
   const { setTransaction } = useTransactionModal()
 
   const endDate = new Date(date)
-  const handleAcceptOfferWithWcro = async () => {
+  const handleAcceptOfferWithWMNT = async () => {
     if (!address || !signerData) return
 
     try {
@@ -221,7 +221,7 @@ const Offer: React.FC<IOffer> = ({
           <div className="hand-img">
             <img src={HandImg} alt="" />
             {owner === address && (
-              <p onClick={handleAcceptOfferWithWcro}>Accept Offer </p>
+              <p onClick={handleAcceptOfferWithWMNT}>Accept Offer </p>
             )}
           </div>
         )}

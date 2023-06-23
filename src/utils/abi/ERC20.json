@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ERC20",
-  "sourceName": "contracts/WCRO/WCRO.sol",
+  "sourceName": "contracts/WMNT/WMNT.sol",
   "abi": [
     {
       "inputs": [

@@ -12,7 +12,7 @@ import {
   NFT1Address,
   STRATEGY,
   TRANSFER_MANAGER_ERC721,
-  WCRO,
+  WMNT,
 } from 'utils/address'
 import NftAbi from '../../../../utils/abi/nft.json'
 import axios from 'axios'
@@ -93,7 +93,7 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
         tokenId: id,
         amount: 1,
         strategy: STRATEGY,
-        currency: WCRO,
+        currency: WMNT,
         nonce: nonceData.nonce,
         startTime: Math.round(Date.now() / 1000),
         endTime: Math.round((Date.now() + 86400000) / 1000),
@@ -174,7 +174,7 @@ const FixedSaleForm: React.FC<IFixedSaleForm> = ({
           tokenId: id,
           amount: 1,
           strategy: STRATEGY,
-          currency: WCRO,
+          currency: WMNT,
           nonce: nonceData.nonce,
           startTime: Math.round(Date.now() / 1000),
           endTime: Math.round((Date.now() + 86400000) / 1000),

@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { AnimatePresence, motion } from 'framer-motion'
 import { formatEther } from 'helpers/formatters'
 import { useTransactionModal } from 'hooks'
-import { MINTED_EXCHANGE, WCRO } from 'utils/address'
+import { MINTED_EXCHANGE, WMNT } from 'utils/address'
 import { useAccount, useSigner } from 'wagmi'
 
 import MintedABI from '../../../utils/abi/minted.json'
@@ -22,7 +22,7 @@ const BuyNFT: React.FC<IBuyNFT> = ({ owner, setOpen, open, dataAsk }) => {
   const { data: signerData, refetch } = useSigner()
   const { setTransaction } = useTransactionModal()
 
-  const handleWCRO = async () => {
+  const handleWMNT = async () => {
     setOpen(false)
     if (!address || !signerData) return
 
@@ -30,7 +30,7 @@ const BuyNFT: React.FC<IBuyNFT> = ({ owner, setOpen, open, dataAsk }) => {
       setTransaction({ loading: true, status: 'pending' })
 
       const erc20Contract = new ethers.Contract(
-        WCRO,
+        WMNT,
         TokenAbi,
         signerData as any,
       )
@@ -106,7 +106,7 @@ const BuyNFT: React.FC<IBuyNFT> = ({ owner, setOpen, open, dataAsk }) => {
       setTransaction({ loading: true, status: 'pending' })
 
       const erc20Contract = new ethers.Contract(
-        WCRO,
+        WMNT,
         TokenAbi,
         signerData as any,
       )
@@ -202,7 +202,7 @@ const BuyNFT: React.FC<IBuyNFT> = ({ owner, setOpen, open, dataAsk }) => {
                       <Button style={{ width: '100%' }} onClick={handleCRO}>
                         $bit
                       </Button>
-                      <Button style={{ width: '100%' }} onClick={handleWCRO}>
+                      <Button style={{ width: '100%' }} onClick={handleWMNT}>
                         $wbit
                       </Button>
                     </div>

@@ -4,7 +4,7 @@ import { Button } from 'components'
 import { useTransactionModal } from 'hooks'
 import { useAccount, useSigner } from 'wagmi'
 import { ethers } from 'ethers'
-import { WCRO } from 'utils/address'
+import { WMNT } from 'utils/address'
 import tokenAbi from '../../utils/abi/token.json'
 
 const Create: React.FC<{}> = () => {
@@ -19,7 +19,7 @@ const Create: React.FC<{}> = () => {
       setTransaction({ loading: true, status: 'pending' })
 
       const mintTokenContract = new ethers.Contract(
-        WCRO,
+        WMNT,
         tokenAbi,
         signerData as any,
       )

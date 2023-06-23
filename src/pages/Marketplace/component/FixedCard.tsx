@@ -5,7 +5,7 @@ import axios from 'axios'
 
 import MintedABI from '../../../utils/abi/minted.json'
 import TokenAbi from '../../../utils/abi/token.json'
-import { MINTED_EXCHANGE, WCRO } from 'utils/address'
+import { MINTED_EXCHANGE, WMNT } from 'utils/address'
 import { Backdrop, Button, LazyImage, ModalHeader } from 'components'
 import { useTransactionModal } from 'hooks'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -57,7 +57,7 @@ const FixedCard: React.FC<IData> = ({
     getData()
   }, [getData])
 
-  const handleWCRO = async () => {
+  const handleWMNT = async () => {
     setOpen(false)
     if (!address || !signerData) return
 
@@ -65,7 +65,7 @@ const FixedCard: React.FC<IData> = ({
       setTransaction({ loading: true, status: 'pending' })
 
       const erc20Contract = new ethers.Contract(
-        WCRO,
+        WMNT,
         TokenAbi,
         signerData as any,
       )
@@ -142,7 +142,7 @@ const FixedCard: React.FC<IData> = ({
       setTransaction({ loading: true, status: 'pending' })
 
       const erc20Contract = new ethers.Contract(
-        WCRO,
+        WMNT,
         TokenAbi,
         signerData as any,
       )
@@ -312,7 +312,7 @@ const FixedCard: React.FC<IData> = ({
                           </Button>
                           <Button
                             style={{ width: '100%' }}
-                            onClick={handleWCRO}
+                            onClick={handleWMNT}
                           >
                             $wbit
                           </Button>

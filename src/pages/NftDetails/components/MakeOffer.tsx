@@ -6,7 +6,7 @@ import { ethers } from 'ethers'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTransactionModal } from 'hooks'
 import React from 'react'
-import { MINTED_EXCHANGE, STRATEGY, WCRO } from 'utils/address'
+import { MINTED_EXCHANGE, STRATEGY, WMNT } from 'utils/address'
 import { useAccount, useSigner } from 'wagmi'
 import TokenAbi from '../../../utils/abi/token.json'
 import { Field, Form, Formik } from 'formik'
@@ -48,7 +48,7 @@ const MakeOffer: React.FC<IMakeOffer> = ({
       setTransaction({ loading: true, status: 'pending' })
 
       const erc20Contract = new ethers.Contract(
-        WCRO,
+        WMNT,
         TokenAbi,
         signerData as any,
       )
@@ -85,7 +85,7 @@ const MakeOffer: React.FC<IMakeOffer> = ({
         tokenId: id,
         amount: 1,
         strategy: STRATEGY,
-        currency: WCRO,
+        currency: WMNT,
         nonce: nonceData.nonce,
         startTime: Math.round(Date.now() / 1000),
         endTime: Math.round((Date.now() + 86400000) / 1000),
@@ -166,7 +166,7 @@ const MakeOffer: React.FC<IMakeOffer> = ({
           tokenId: id,
           amount: 1,
           strategy: STRATEGY,
-          currency: WCRO,
+          currency: WMNT,
           nonce: nonceData.nonce,
           startTime: Math.round(Date.now() / 1000),
           endTime: Math.round(
